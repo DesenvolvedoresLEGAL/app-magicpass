@@ -14,7 +14,7 @@ import {
 
 export function TopBar() {
   return (
-    <header className="border-b bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/60">
+    <header className="relative z-40 border-b bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/60">
       <div className="flex h-16 items-center gap-4 px-6">
         <SidebarTrigger />
         
