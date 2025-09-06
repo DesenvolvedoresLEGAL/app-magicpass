@@ -8,3 +8,9 @@ verify_jwt = false
 
 [functions.analytics-summary]
 verify_jwt = true
+
+[functions.log-performance]
+verify_jwt = true
+
+[functions.cache-invalidation]
+verify_jwt = false
