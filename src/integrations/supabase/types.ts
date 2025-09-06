@@ -62,6 +62,20 @@ export type Database = {
             foreignKeyName: "analytics_events_event_id_fkey"
             columns: ["event_id"]
             isOneToOne: false
+            referencedRelation: "daily_event_stats"
+            referencedColumns: ["event_id"]
+          },
+          {
+            foreignKeyName: "analytics_events_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "event_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "analytics_events_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
             referencedRelation: "events"
             referencedColumns: ["id"]
           },
@@ -150,6 +164,20 @@ export type Database = {
             foreignKeyName: "analytics_sessions_event_id_fkey"
             columns: ["event_id"]
             isOneToOne: false
+            referencedRelation: "daily_event_stats"
+            referencedColumns: ["event_id"]
+          },
+          {
+            foreignKeyName: "analytics_sessions_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "event_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "analytics_sessions_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
             referencedRelation: "events"
             referencedColumns: ["id"]
           },
@@ -165,6 +193,44 @@ export type Database = {
             columns: ["participant_id"]
             isOneToOne: false
             referencedRelation: "participants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cache_invalidations: {
+        Row: {
+          cache_key: string
+          created_at: string
+          id: string
+          invalidation_reason: string | null
+          organization_id: string | null
+          triggered_by_action: string | null
+          triggered_by_user: string | null
+        }
+        Insert: {
+          cache_key: string
+          created_at?: string
+          id?: string
+          invalidation_reason?: string | null
+          organization_id?: string | null
+          triggered_by_action?: string | null
+          triggered_by_user?: string | null
+        }
+        Update: {
+          cache_key?: string
+          created_at?: string
+          id?: string
+          invalidation_reason?: string | null
+          organization_id?: string | null
+          triggered_by_action?: string | null
+          triggered_by_user?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cache_invalidations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -216,6 +282,20 @@ export type Database = {
           valid_until?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "discount_codes_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "daily_event_stats"
+            referencedColumns: ["event_id"]
+          },
+          {
+            foreignKeyName: "discount_codes_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "event_summary"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "discount_codes_event_id_fkey"
             columns: ["event_id"]
@@ -350,6 +430,20 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "event_analytics_summary_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "daily_event_stats"
+            referencedColumns: ["event_id"]
+          },
+          {
+            foreignKeyName: "event_analytics_summary_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "event_summary"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "event_analytics_summary_event_id_fkey"
             columns: ["event_id"]
@@ -493,6 +587,20 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "financial_reports_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "daily_event_stats"
+            referencedColumns: ["event_id"]
+          },
+          {
+            foreignKeyName: "financial_reports_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "event_summary"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "financial_reports_event_id_fkey"
             columns: ["event_id"]
@@ -659,6 +767,20 @@ export type Database = {
             foreignKeyName: "orders_event_id_fkey"
             columns: ["event_id"]
             isOneToOne: false
+            referencedRelation: "daily_event_stats"
+            referencedColumns: ["event_id"]
+          },
+          {
+            foreignKeyName: "orders_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "event_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
             referencedRelation: "events"
             referencedColumns: ["id"]
           },
@@ -757,6 +879,20 @@ export type Database = {
             foreignKeyName: "participants_event_id_fkey"
             columns: ["event_id"]
             isOneToOne: false
+            referencedRelation: "daily_event_stats"
+            referencedColumns: ["event_id"]
+          },
+          {
+            foreignKeyName: "participants_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "event_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "participants_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
             referencedRelation: "events"
             referencedColumns: ["id"]
           },
@@ -813,6 +949,20 @@ export type Database = {
             foreignKeyName: "payments_event_id_fkey"
             columns: ["event_id"]
             isOneToOne: false
+            referencedRelation: "daily_event_stats"
+            referencedColumns: ["event_id"]
+          },
+          {
+            foreignKeyName: "payments_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "event_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
             referencedRelation: "events"
             referencedColumns: ["id"]
           },
@@ -821,6 +971,50 @@ export type Database = {
             columns: ["participant_id"]
             isOneToOne: false
             referencedRelation: "participants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      performance_metrics: {
+        Row: {
+          created_at: string
+          id: string
+          metadata: Json | null
+          metric_name: string
+          metric_type: string
+          organization_id: string | null
+          unit: string
+          user_id: string | null
+          value: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          metric_name: string
+          metric_type: string
+          organization_id?: string | null
+          unit: string
+          user_id?: string | null
+          value: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          metric_name?: string
+          metric_type?: string
+          organization_id?: string | null
+          unit?: string
+          user_id?: string | null
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "performance_metrics_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -869,6 +1063,20 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "pricing_tiers_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "daily_event_stats"
+            referencedColumns: ["event_id"]
+          },
+          {
+            foreignKeyName: "pricing_tiers_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "event_summary"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "pricing_tiers_event_id_fkey"
             columns: ["event_id"]
@@ -963,7 +1171,48 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      daily_event_stats: {
+        Row: {
+          checkins: number | null
+          date: string | null
+          event_id: string | null
+          organization_id: string | null
+          registrations: number | null
+          unique_participants: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_summary: {
+        Row: {
+          check_in_rate: number | null
+          checked_in_count: number | null
+          end_date: string | null
+          id: string | null
+          name: string | null
+          organization_id: string | null
+          organization_name: string | null
+          start_date: string | null
+          status: string | null
+          total_participants: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       calculate_event_analytics: {
@@ -973,6 +1222,49 @@ export type Database = {
           metric_name: string
           metric_value: number
           previous_value: number
+        }[]
+      }
+      get_event_stats_cached: {
+        Args: { p_event_id: string }
+        Returns: {
+          check_in_rate: number
+          checkins: number
+          last_updated: string
+          registrations: number
+        }[]
+      }
+      log_performance_metric: {
+        Args: {
+          p_metadata?: Json
+          p_metric_name: string
+          p_metric_type: string
+          p_organization_id?: string
+          p_unit: string
+          p_value: number
+        }
+        Returns: string
+      }
+      refresh_daily_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      search_participants: {
+        Args: {
+          p_event_id: string
+          p_limit?: number
+          p_offset?: number
+          p_search_term?: string
+          p_status?: string
+        }
+        Returns: {
+          checked_in_at: string
+          email: string
+          id: string
+          name: string
+          registered_at: string
+          status: string
+          ticket_category: string
+          total_count: number
         }[]
       }
     }
