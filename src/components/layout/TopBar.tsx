@@ -1,4 +1,4 @@
-import { Search, User, Bell } from 'lucide-react';
+import { Search, User, Bell, LogOut } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -10,8 +10,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useAuth } from '@/hooks/useAuth';
 
 export function TopBar() {
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
+
   return (
     <header className="relative z-40 border-b bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/60">
       <div className="flex h-16 items-center gap-4 px-6">
@@ -39,7 +46,7 @@ export function TopBar() {
                 <Avatar className="h-8 w-8">
                   <AvatarImage src="/avatar.png" alt="Avatar" />
                   <AvatarFallback className="bg-primary text-primary-foreground">
-                    U
+                    {user?.email?.charAt(0).toUpperCase() || 'U'}
                   </AvatarFallback>
                 </Avatar>
               </Button>
@@ -47,9 +54,11 @@ export function TopBar() {
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">Usuário Admin</p>
+                  <p className="text-sm font-medium leading-none">
+                    {user?.email || 'Usuário'}
+                  </p>
                   <p className="text-xs leading-none text-muted-foreground">
-                    admin@magicpass.com
+                    {user?.email}
                   </p>
                 </div>
               </DropdownMenuLabel>
@@ -58,7 +67,8 @@ export function TopBar() {
                 <User className="mr-2 h-4 w-4" />
                 <span>Perfil</span>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={handleSignOut}>
+                <LogOut className="mr-2 h-4 w-4" />
                 <span>Sair</span>
               </DropdownMenuItem>
             </DropdownMenuContent>

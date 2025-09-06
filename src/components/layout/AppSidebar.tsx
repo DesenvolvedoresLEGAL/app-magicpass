@@ -10,12 +10,12 @@ import {
 import { NavLink, useLocation } from 'react-router-dom';
 
 const menuItems = [
-  { title: 'Dashboard', url: '/', icon: LayoutDashboard },
-  { title: 'Eventos', url: '/eventos', icon: Calendar },
-  { title: 'Credenciamento', url: '/credenciamento', icon: UserCheck },
-  { title: 'Tempo Real', url: '/tempo-real', icon: Activity },
-  { title: 'Relatórios', url: '/relatorios', icon: FileText },
-  { title: 'Configurações', url: '/config', icon: Settings },
+  { title: 'Dashboard', url: '/client', icon: LayoutDashboard },
+  { title: 'Eventos', url: '/client/eventos', icon: Calendar },
+  { title: 'Credenciamento', url: '/client/credenciamento', icon: UserCheck },
+  { title: 'Tempo Real', url: '/client/tempo-real', icon: Activity },
+  { title: 'Relatórios', url: '/client/relatorios', icon: FileText },
+  { title: 'Configurações', url: '/client/config', icon: Settings },
 ];
 
 export function AppSidebar() {
