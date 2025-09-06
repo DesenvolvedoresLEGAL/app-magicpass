@@ -5,16 +5,22 @@ import {
   Activity, 
   FileText, 
   Settings,
-  Zap
+  Zap,
+  Palette,
+  DollarSign,
+  BarChart3
 } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
 
 const menuItems = [
   { title: 'Dashboard', url: '/client', icon: LayoutDashboard },
   { title: 'Eventos', url: '/client/eventos', icon: Calendar },
+  { title: 'Branding', url: '/client/branding', icon: Palette },
   { title: 'Credenciamento', url: '/client/credenciamento', icon: UserCheck },
   { title: 'Tempo Real', url: '/client/tempo-real', icon: Activity },
   { title: 'Relatórios', url: '/client/relatorios', icon: FileText },
+  { title: 'Financeiro', url: '/client/financeiro', icon: DollarSign },
+  { title: 'Analytics', url: '/client/analytics', icon: BarChart3 },
   { title: 'Configurações', url: '/client/config', icon: Settings },
 ];
 

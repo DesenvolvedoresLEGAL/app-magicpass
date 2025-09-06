@@ -26,6 +26,12 @@ import TempoReal from "./pages/TempoReal";
 import Relatorios from "./pages/Relatorios";
 import Configuracoes from "./pages/Configuracoes";
 
+// New Client Portal Pages
+import { Branding } from "./pages/client/Branding";
+import { FormBuilder } from "./pages/client/FormBuilder";
+import { Financeiro } from "./pages/client/Financeiro";
+import { Analytics } from "./pages/client/Analytics";
+
 // Public Pages
 import PublicRegister from "./pages/PublicRegister";
 import NotFound from "./pages/NotFound";
@@ -83,9 +89,13 @@ function AppRoutes() {
               <Route index element={<Dashboard />} />
               <Route path="eventos" element={<Eventos />} />
               <Route path="eventos/:id" element={<EventoDetalhes />} />
+              <Route path="eventos/:eventId/form-builder" element={<FormBuilder />} />
+              <Route path="branding" element={<Branding />} />
               <Route path="credenciamento" element={<Credenciamento />} />
               <Route path="tempo-real" element={<TempoReal />} />
               <Route path="relatorios" element={<Relatorios />} />
+              <Route path="financeiro" element={<Financeiro />} />
+              <Route path="analytics" element={<Analytics />} />
               <Route path="config" element={<Configuracoes />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
