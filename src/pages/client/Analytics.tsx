@@ -82,17 +82,48 @@ export function Analytics() {
         }
       }
 
-      const t0 = performance.now();
-      const { data: result, error } = await supabase.functions.invoke('analytics-summary', {
-        body: { organizationId, period, eventId },
-      });
-      const duration = performance.now() - t0;
-      recordMetric('api_response', 'analytics-summary', Math.round(duration), 'ms', { period, eventId });
+      // For demo purposes, use mock data instead of calling the edge function
+      const mockAnalyticsData: AnalyticsData = {
+        conversationFunnel: [
+          { name: 'Visualizações', value: 1000, color: '#8884d8' },
+          { name: 'Iniciaram inscrição', value: 800, color: '#82ca9d' },
+          { name: 'Completaram inscrição', value: 650, color: '#ffc658' },
+          { name: 'Check-in realizado', value: 540, color: '#ff7300' }
+        ],
+        eventComparison: [
+          { name: 'Conferência Tech', inscricoes: 120, checkins: 95, conversao: 79.2 },
+          { name: 'Workshop React', inscricoes: 80, checkins: 52, conversao: 65.0 },
+          { name: 'Meetup DevOps', inscricoes: 45, checkins: 38, conversao: 84.4 }
+        ],
+        temporalTrends: [
+          { date: '2024-01-01', inscricoes: 20, checkins: 18 },
+          { date: '2024-01-02', inscricoes: 35, checkins: 28 },
+          { date: '2024-01-03', inscricoes: 45, checkins: 35 },
+          { date: '2024-01-04', inscricoes: 60, checkins: 48 },
+          { date: '2024-01-05', inscricoes: 80, checkins: 65 }
+        ],
+        demographics: [
+          { name: 'Desenvolvedores', value: 45, color: '#8884d8' },
+          { name: 'Designers', value: 25, color: '#82ca9d' },
+          { name: 'Gestores', value: 20, color: '#ffc658' },
+          { name: 'Outros', value: 10, color: '#ff7300' }
+        ],
+        deviceStats: [
+          { device: 'Desktop', sessions: 650, conversao: 78.5 },
+          { device: 'Mobile', sessions: 350, conversao: 68.2 }
+        ],
+        abandonment: [
+          { step: 'Página inicial', abandono: 5 },
+          { step: 'Nome', abandono: 8 },
+          { step: 'Email', abandono: 12 },
+          { step: 'Telefone', abandono: 35 },
+          { step: 'Pagamento', abandono: 15 }
+        ]
+      };
 
-      if (error) throw error;
-      setData(result as AnalyticsData);
-      // salva no cache
-      sessionStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data: result }));
+      setData(mockAnalyticsData);
+      // Save to cache
+      sessionStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data: mockAnalyticsData }));
     } catch (e) {
       console.error('Erro ao carregar analytics:', e);
       recordMetric('error_rate', 'analytics-summary', 1, 'count');

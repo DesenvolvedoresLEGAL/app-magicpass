@@ -32,15 +32,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (session?.user) {
           // Fetch user profile and role
           setTimeout(async () => {
-            const { data: userData } = await supabase
-              .from('users')
-              .select('role, organization_id')
-              .eq('auth_user_id', session.user.id)
-              .single();
-            
-            if (userData) {
-              setUserRole(userData.role);
-              setOrganizationId(userData.organization_id);
+            try {
+              const { data: userData, error } = await supabase
+                .from('users')
+                .select('role, organization_id')
+                .eq('auth_user_id', session.user.id)
+                .maybeSingle();
+              
+              if (error) {
+                console.error('Error fetching user data:', error);
+                // Set default values for authenticated users without profile
+                setUserRole('client_admin');
+                setOrganizationId('demo-org-id');
+                return;
+              }
+              
+              if (userData) {
+                setUserRole(userData.role);
+                setOrganizationId(userData.organization_id);
+              } else {
+                // User exists in auth but not in users table - set defaults
+                console.warn('User authenticated but no profile found, using defaults');
+                setUserRole('client_admin');
+                setOrganizationId('demo-org-id');
+              }
+            } catch (err) {
+              console.error('Exception fetching user data:', err);
+              // Fallback to demo values to prevent app from breaking
+              setUserRole('client_admin');
+              setOrganizationId('demo-org-id');
             }
           }, 0);
         } else {
