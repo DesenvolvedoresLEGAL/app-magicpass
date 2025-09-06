@@ -14,7 +14,216 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      events: {
+        Row: {
+          allow_reentry: boolean | null
+          capacity: number | null
+          created_at: string
+          description: string | null
+          end_date: string
+          id: string
+          lgpd_text: string | null
+          location: string | null
+          name: string
+          organization_id: string
+          qr_prefix: string | null
+          registration_fields: Json | null
+          start_date: string
+          status: string | null
+          ticket_categories: Json | null
+          updated_at: string
+          webhook_url: string | null
+        }
+        Insert: {
+          allow_reentry?: boolean | null
+          capacity?: number | null
+          created_at?: string
+          description?: string | null
+          end_date: string
+          id?: string
+          lgpd_text?: string | null
+          location?: string | null
+          name: string
+          organization_id: string
+          qr_prefix?: string | null
+          registration_fields?: Json | null
+          start_date: string
+          status?: string | null
+          ticket_categories?: Json | null
+          updated_at?: string
+          webhook_url?: string | null
+        }
+        Update: {
+          allow_reentry?: boolean | null
+          capacity?: number | null
+          created_at?: string
+          description?: string | null
+          end_date?: string
+          id?: string
+          lgpd_text?: string | null
+          location?: string | null
+          name?: string
+          organization_id?: string
+          qr_prefix?: string | null
+          registration_fields?: Json | null
+          start_date?: string
+          status?: string | null
+          ticket_categories?: Json | null
+          updated_at?: string
+          webhook_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          created_at: string
+          id: string
+          logo_url: string | null
+          name: string
+          primary_color: string | null
+          secondary_color: string | null
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name: string
+          primary_color?: string | null
+          secondary_color?: string | null
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name?: string
+          primary_color?: string | null
+          secondary_color?: string | null
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      participants: {
+        Row: {
+          checked_in_at: string | null
+          checked_out_at: string | null
+          document: string | null
+          email: string
+          event_id: string
+          id: string
+          lgpd_consent: boolean | null
+          lgpd_consent_date: string | null
+          name: string
+          phone: string | null
+          photo_url: string | null
+          qr_code: string
+          registered_at: string
+          registration_data: Json | null
+          status: string | null
+          ticket_category: string | null
+        }
+        Insert: {
+          checked_in_at?: string | null
+          checked_out_at?: string | null
+          document?: string | null
+          email: string
+          event_id: string
+          id?: string
+          lgpd_consent?: boolean | null
+          lgpd_consent_date?: string | null
+          name: string
+          phone?: string | null
+          photo_url?: string | null
+          qr_code: string
+          registered_at?: string
+          registration_data?: Json | null
+          status?: string | null
+          ticket_category?: string | null
+        }
+        Update: {
+          checked_in_at?: string | null
+          checked_out_at?: string | null
+          document?: string | null
+          email?: string
+          event_id?: string
+          id?: string
+          lgpd_consent?: boolean | null
+          lgpd_consent_date?: string | null
+          name?: string
+          phone?: string | null
+          photo_url?: string | null
+          qr_code?: string
+          registered_at?: string
+          registration_data?: Json | null
+          status?: string | null
+          ticket_category?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "participants_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      users: {
+        Row: {
+          active: boolean | null
+          auth_user_id: string | null
+          created_at: string
+          email: string
+          id: string
+          name: string
+          organization_id: string | null
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean | null
+          auth_user_id?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+          organization_id?: string | null
+          role: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean | null
+          auth_user_id?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          organization_id?: string | null
+          role?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "users_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

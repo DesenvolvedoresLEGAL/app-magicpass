@@ -12,6 +12,7 @@ import TempoReal from "./pages/TempoReal";
 import Relatorios from "./pages/Relatorios";
 import Configuracoes from "./pages/Configuracoes";
 import NotFound from "./pages/NotFound";
+import PublicRegister from "./pages/PublicRegister";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,8 @@ const App = () => (
             <Route path="/tempo-real" element={<TempoReal />} />
             <Route path="/relatorios" element={<Relatorios />} />
             <Route path="/config" element={<Configuracoes />} />
+            {/* Portal público de inscrição */}
+            <Route path="/inscricao/:eventId" element={<PublicRegister />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AppShell>
