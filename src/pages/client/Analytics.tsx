@@ -14,6 +14,7 @@ import {
   Clock, MapPin, Smartphone, Monitor, AlertTriangle
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 
 interface AnalyticsData {
   conversationFunnel: Array<{ name: string; value: number; color: string }>;
@@ -63,51 +64,28 @@ export function Analytics() {
 
   const loadAnalyticsData = async () => {
     setLoading(true);
-    
-    // Mock data - in real implementation, this would come from your analytics system
-    const mockData: AnalyticsData = {
-      conversationFunnel: [
-        { name: 'Visualizações da página', value: 1000, color: '#3b82f6' },
-        { name: 'Iniciaram inscrição', value: 650, color: '#6366f1' },
-        { name: 'Preencheram dados', value: 480, color: '#8b5cf6' },
-        { name: 'Finalizaram inscrição', value: 420, color: '#a855f7' },
-        { name: 'Fizeram check-in', value: 350, color: '#c084fc' }
-      ],
-      eventComparison: [
-        { name: 'Conferência Tech', inscricoes: 150, checkins: 142, conversao: 94.7 },
-        { name: 'Workshop React', inscricoes: 80, checkins: 52, conversao: 65.0 },
-        { name: 'Meetup DevOps', inscricoes: 45, checkins: 41, conversao: 91.1 },
-        { name: 'Palestra IA', inscricoes: 200, checkins: 180, conversao: 90.0 }
-      ],
-      temporalTrends: [
-        { date: '2024-01-01', inscricoes: 45, checkins: 42 },
-        { date: '2024-01-08', inscricoes: 52, checkins: 48 },
-        { date: '2024-01-15', inscricoes: 38, checkins: 35 },
-        { date: '2024-01-22', inscricoes: 65, checkins: 58 },
-        { date: '2024-01-29', inscricoes: 72, checkins: 68 }
-      ],
-      demographics: [
-        { name: 'Desenvolvedores', value: 45, color: '#3b82f6' },
-        { name: 'Designers', value: 25, color: '#06d6a0' },
-        { name: 'Product Managers', value: 20, color: '#f72585' },
-        { name: 'Outros', value: 10, color: '#ffd60a' }
-      ],
-      deviceStats: [
-        { device: 'Desktop', sessions: 450, conversao: 78.5 },
-        { device: 'Mobile', sessions: 320, conversao: 65.2 },
-        { device: 'Tablet', sessions: 80, conversao: 72.1 }
-      ],
-      abandonment: [
-        { step: 'Página inicial', abandono: 5 },
-        { step: 'Dados pessoais', abandono: 15 },
-        { step: 'Telefone', abandono: 35 },
-        { step: 'Confirmação', abandono: 8 },
-        { step: 'Pagamento', abandono: 12 }
-      ]
-    };
-
-    setData(mockData);
-    setLoading(false);
+    try {
+      const period = selectedPeriod;
+      const eventId = selectedEvent !== 'all' ? selectedEvent : null;
+      const { data: result, error } = await supabase.functions.invoke('analytics-summary', {
+        body: { organizationId, period, eventId },
+      });
+      if (error) throw error;
+      setData(result as AnalyticsData);
+    } catch (e) {
+      console.error('Erro ao carregar analytics:', e);
+      // Fallback seguro para evitar tela em branco
+      setData({
+        conversationFunnel: [],
+        eventComparison: [],
+        temporalTrends: [],
+        demographics: [],
+        deviceStats: [],
+        abandonment: []
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const exportReport = () => {
