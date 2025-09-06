@@ -1340,6 +1340,7 @@ export type Database = {
           lgpd_text: string | null
           location: string | null
           name: string | null
+          qr_prefix: string | null
           registration_fields: Json | null
           start_date: string | null
           status: string | null
@@ -1354,6 +1355,7 @@ export type Database = {
           lgpd_text?: string | null
           location?: string | null
           name?: string | null
+          qr_prefix?: string | null
           registration_fields?: Json | null
           start_date?: string | null
           status?: string | null
@@ -1368,6 +1370,7 @@ export type Database = {
           lgpd_text?: string | null
           location?: string | null
           name?: string | null
+          qr_prefix?: string | null
           registration_fields?: Json | null
           start_date?: string | null
           status?: string | null

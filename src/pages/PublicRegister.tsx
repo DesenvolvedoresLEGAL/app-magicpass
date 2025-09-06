@@ -86,12 +86,9 @@ export default function PublicRegister() {
       if (!eventId) return;
       setLoading(true);
       const { data, error } = await supabase
-        .from("events")
-        .select(
-          "id, name, description, location, start_date, end_date, qr_prefix, lgpd_text, registration_fields, ticket_categories"
-        )
+        .from("public_events")
+        .select("*")
         .eq("id", eventId)
-        .eq("status", "active")
         .single();
 
       if (error) {
