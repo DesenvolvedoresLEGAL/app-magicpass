@@ -1086,6 +1086,33 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          organization_id: string
+          role: Database["public"]["Enums"]["app_role"]
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          organization_id: string
+          role: Database["public"]["Enums"]["app_role"]
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          organization_id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           active: boolean | null
@@ -1233,6 +1260,18 @@ export type Database = {
           registrations: number
         }[]
       }
+      get_user_organization: {
+        Args: { user_id: string }
+        Returns: string
+      }
+      get_user_role: {
+        Args: { user_id: string }
+        Returns: string
+      }
+      has_role: {
+        Args: { required_role: string; user_id: string }
+        Returns: boolean
+      }
       log_performance_metric: {
         Args: {
           p_metadata?: Json
@@ -1269,7 +1308,7 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "legal_admin" | "client_admin" | "client_operator"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1396,6 +1435,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["legal_admin", "client_admin", "client_operator"],
+    },
   },
 } as const
