@@ -14,6 +14,62 @@ export type Database = {
   }
   public: {
     Tables: {
+      discount_codes: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          description: string | null
+          discount_type: string
+          discount_value: number
+          event_id: string | null
+          id: string
+          max_uses: number | null
+          updated_at: string
+          used_count: number | null
+          valid_from: string
+          valid_until: string | null
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          description?: string | null
+          discount_type?: string
+          discount_value: number
+          event_id?: string | null
+          id?: string
+          max_uses?: number | null
+          updated_at?: string
+          used_count?: number | null
+          valid_from?: string
+          valid_until?: string | null
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          description?: string | null
+          discount_type?: string
+          discount_value?: number
+          event_id?: string | null
+          id?: string
+          max_uses?: number | null
+          updated_at?: string
+          used_count?: number | null
+          valid_from?: string
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discount_codes_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_templates: {
         Row: {
           active: boolean | null
@@ -58,6 +114,7 @@ export type Database = {
           allow_reentry: boolean | null
           capacity: number | null
           created_at: string
+          default_currency: string | null
           description: string | null
           end_date: string
           id: string
@@ -65,10 +122,12 @@ export type Database = {
           location: string | null
           name: string
           organization_id: string
+          payment_enabled: boolean | null
           qr_prefix: string | null
           registration_fields: Json | null
           start_date: string
           status: string | null
+          stripe_account_id: string | null
           ticket_categories: Json | null
           updated_at: string
           webhook_url: string | null
@@ -77,6 +136,7 @@ export type Database = {
           allow_reentry?: boolean | null
           capacity?: number | null
           created_at?: string
+          default_currency?: string | null
           description?: string | null
           end_date: string
           id?: string
@@ -84,10 +144,12 @@ export type Database = {
           location?: string | null
           name: string
           organization_id: string
+          payment_enabled?: boolean | null
           qr_prefix?: string | null
           registration_fields?: Json | null
           start_date: string
           status?: string | null
+          stripe_account_id?: string | null
           ticket_categories?: Json | null
           updated_at?: string
           webhook_url?: string | null
@@ -96,6 +158,7 @@ export type Database = {
           allow_reentry?: boolean | null
           capacity?: number | null
           created_at?: string
+          default_currency?: string | null
           description?: string | null
           end_date?: string
           id?: string
@@ -103,10 +166,12 @@ export type Database = {
           location?: string | null
           name?: string
           organization_id?: string
+          payment_enabled?: boolean | null
           qr_prefix?: string | null
           registration_fields?: Json | null
           start_date?: string
           status?: string | null
+          stripe_account_id?: string | null
           ticket_categories?: Json | null
           updated_at?: string
           webhook_url?: string | null
@@ -117,6 +182,65 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      financial_reports: {
+        Row: {
+          created_at: string
+          data: Json | null
+          event_id: string | null
+          fees_amount: number
+          id: string
+          net_revenue: number
+          organization_id: string
+          period_end: string
+          period_start: string
+          refunded_amount: number
+          report_type: string
+          total_revenue: number
+          total_transactions: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json | null
+          event_id?: string | null
+          fees_amount?: number
+          id?: string
+          net_revenue?: number
+          organization_id: string
+          period_end: string
+          period_start: string
+          refunded_amount?: number
+          report_type: string
+          total_revenue?: number
+          total_transactions?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json | null
+          event_id?: string | null
+          fees_amount?: number
+          id?: string
+          net_revenue?: number
+          organization_id?: string
+          period_end?: string
+          period_start?: string
+          refunded_amount?: number
+          report_type?: string
+          total_revenue?: number
+          total_transactions?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financial_reports_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
             referencedColumns: ["id"]
           },
         ]
@@ -171,6 +295,117 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      order_items: {
+        Row: {
+          created_at: string
+          id: string
+          order_id: string | null
+          participant_data: Json | null
+          pricing_tier_id: string | null
+          quantity: number
+          total_price: number
+          unit_price: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          participant_data?: Json | null
+          pricing_tier_id?: string | null
+          quantity?: number
+          total_price: number
+          unit_price: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          participant_data?: Json | null
+          pricing_tier_id?: string | null
+          quantity?: number
+          total_price?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_pricing_tier_id_fkey"
+            columns: ["pricing_tier_id"]
+            isOneToOne: false
+            referencedRelation: "pricing_tiers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string
+          currency: string
+          customer_email: string
+          customer_name: string
+          discount_amount: number | null
+          discount_code_id: string | null
+          event_id: string | null
+          id: string
+          metadata: Json | null
+          status: string
+          stripe_session_id: string | null
+          total_amount: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          customer_email: string
+          customer_name: string
+          discount_amount?: number | null
+          discount_code_id?: string | null
+          event_id?: string | null
+          id?: string
+          metadata?: Json | null
+          status?: string
+          stripe_session_id?: string | null
+          total_amount: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          customer_email?: string
+          customer_name?: string
+          discount_amount?: number | null
+          discount_code_id?: string | null
+          event_id?: string | null
+          id?: string
+          metadata?: Json | null
+          status?: string
+          stripe_session_id?: string | null
+          total_amount?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_discount_code_id_fkey"
+            columns: ["discount_code_id"]
+            isOneToOne: false
+            referencedRelation: "discount_codes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       organizations: {
         Row: {
@@ -263,6 +498,122 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "participants_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          event_id: string | null
+          id: string
+          metadata: Json | null
+          participant_id: string | null
+          payment_method: string | null
+          status: string
+          stripe_customer_id: string | null
+          stripe_payment_intent_id: string | null
+          stripe_session_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          event_id?: string | null
+          id?: string
+          metadata?: Json | null
+          participant_id?: string | null
+          payment_method?: string | null
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          event_id?: string | null
+          id?: string
+          metadata?: Json | null
+          participant_id?: string | null
+          payment_method?: string | null
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "participants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pricing_tiers: {
+        Row: {
+          active: boolean
+          created_at: string
+          currency: string
+          description: string | null
+          early_bird_end_date: string | null
+          early_bird_price: number | null
+          event_id: string | null
+          id: string
+          max_quantity: number | null
+          name: string
+          price: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          currency?: string
+          description?: string | null
+          early_bird_end_date?: string | null
+          early_bird_price?: number | null
+          event_id?: string | null
+          id?: string
+          max_quantity?: number | null
+          name: string
+          price: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          currency?: string
+          description?: string | null
+          early_bird_end_date?: string | null
+          early_bird_price?: number | null
+          event_id?: string | null
+          id?: string
+          max_quantity?: number | null
+          name?: string
+          price?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pricing_tiers_event_id_fkey"
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "events"
