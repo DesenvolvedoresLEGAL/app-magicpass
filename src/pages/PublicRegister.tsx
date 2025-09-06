@@ -97,11 +97,24 @@ export default function PublicRegister() {
         return;
       }
 
-      // Garantir arrays
-      const reg = Array.isArray(data.registration_fields) ? data.registration_fields : [];
-      const cat = Array.isArray(data.ticket_categories) ? data.ticket_categories : [];
+      // Normaliza tipos vindos do Supabase (JSON -> tipos locais)
+      const reg = Array.isArray((data as any).registration_fields) ? (data as any).registration_fields : [];
+      const cat = Array.isArray((data as any).ticket_categories) ? (data as any).ticket_categories : [];
 
-      setEvent({ ...data, registration_fields: reg, ticket_categories: cat } as EventData);
+      const eventData: EventData = {
+        id: String((data as any).id),
+        name: String((data as any).name),
+        description: (data as any).description ?? null,
+        location: (data as any).location ?? null,
+        start_date: String((data as any).start_date),
+        end_date: String((data as any).end_date),
+        qr_prefix: (data as any).qr_prefix ?? null,
+        lgpd_text: (data as any).lgpd_text ?? null,
+        registration_fields: reg as RegistrationField[],
+        ticket_categories: cat as TicketCategory[],
+      };
+
+      setEvent(eventData);
       setLoading(false);
     };
 
