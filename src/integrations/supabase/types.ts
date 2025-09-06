@@ -14,6 +14,161 @@ export type Database = {
   }
   public: {
     Tables: {
+      analytics_events: {
+        Row: {
+          created_at: string
+          event_data: Json
+          event_id: string | null
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          organization_id: string | null
+          participant_id: string | null
+          referer: string | null
+          session_id: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_data?: Json
+          event_id?: string | null
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          organization_id?: string | null
+          participant_id?: string | null
+          referer?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_data?: Json
+          event_id?: string | null
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          organization_id?: string | null
+          participant_id?: string | null
+          referer?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "analytics_events_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "analytics_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "analytics_events_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "participants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      analytics_sessions: {
+        Row: {
+          browser: string | null
+          city: string | null
+          country: string | null
+          device_type: string | null
+          duration_seconds: number | null
+          ended_at: string | null
+          event_id: string | null
+          id: string
+          organization_id: string | null
+          os: string | null
+          page_views: number | null
+          participant_id: string | null
+          referrer_domain: string | null
+          session_id: string
+          started_at: string
+          user_id: string | null
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          browser?: string | null
+          city?: string | null
+          country?: string | null
+          device_type?: string | null
+          duration_seconds?: number | null
+          ended_at?: string | null
+          event_id?: string | null
+          id?: string
+          organization_id?: string | null
+          os?: string | null
+          page_views?: number | null
+          participant_id?: string | null
+          referrer_domain?: string | null
+          session_id: string
+          started_at?: string
+          user_id?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          browser?: string | null
+          city?: string | null
+          country?: string | null
+          device_type?: string | null
+          duration_seconds?: number | null
+          ended_at?: string | null
+          event_id?: string | null
+          id?: string
+          organization_id?: string | null
+          os?: string | null
+          page_views?: number | null
+          participant_id?: string | null
+          referrer_domain?: string | null
+          session_id?: string
+          started_at?: string
+          user_id?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "analytics_sessions_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "analytics_sessions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "analytics_sessions_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "participants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       discount_codes: {
         Row: {
           active: boolean
@@ -108,6 +263,108 @@ export type Database = {
           variables?: Json | null
         }
         Relationships: []
+      }
+      event_analytics_summary: {
+        Row: {
+          avg_session_duration: number | null
+          bounce_rate: number | null
+          checkin_conversion_rate: number | null
+          checkins: number | null
+          created_at: string
+          date: string
+          desktop_sessions: number | null
+          direct_traffic: number | null
+          email_traffic: number | null
+          event_id: string | null
+          form_abandonment_rate: number | null
+          id: string
+          mobile_sessions: number | null
+          organic_traffic: number | null
+          organization_id: string | null
+          page_views: number | null
+          paid_traffic: number | null
+          registration_completed: number | null
+          registration_conversion_rate: number | null
+          registration_started: number | null
+          social_traffic: number | null
+          tablet_sessions: number | null
+          top_cities: Json | null
+          top_countries: Json | null
+          unique_visitors: number | null
+          updated_at: string
+        }
+        Insert: {
+          avg_session_duration?: number | null
+          bounce_rate?: number | null
+          checkin_conversion_rate?: number | null
+          checkins?: number | null
+          created_at?: string
+          date: string
+          desktop_sessions?: number | null
+          direct_traffic?: number | null
+          email_traffic?: number | null
+          event_id?: string | null
+          form_abandonment_rate?: number | null
+          id?: string
+          mobile_sessions?: number | null
+          organic_traffic?: number | null
+          organization_id?: string | null
+          page_views?: number | null
+          paid_traffic?: number | null
+          registration_completed?: number | null
+          registration_conversion_rate?: number | null
+          registration_started?: number | null
+          social_traffic?: number | null
+          tablet_sessions?: number | null
+          top_cities?: Json | null
+          top_countries?: Json | null
+          unique_visitors?: number | null
+          updated_at?: string
+        }
+        Update: {
+          avg_session_duration?: number | null
+          bounce_rate?: number | null
+          checkin_conversion_rate?: number | null
+          checkins?: number | null
+          created_at?: string
+          date?: string
+          desktop_sessions?: number | null
+          direct_traffic?: number | null
+          email_traffic?: number | null
+          event_id?: string | null
+          form_abandonment_rate?: number | null
+          id?: string
+          mobile_sessions?: number | null
+          organic_traffic?: number | null
+          organization_id?: string | null
+          page_views?: number | null
+          paid_traffic?: number | null
+          registration_completed?: number | null
+          registration_conversion_rate?: number | null
+          registration_started?: number | null
+          social_traffic?: number | null
+          tablet_sessions?: number | null
+          top_cities?: Json | null
+          top_countries?: Json | null
+          unique_visitors?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_analytics_summary_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_analytics_summary_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       events: {
         Row: {
@@ -709,7 +966,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      calculate_event_analytics: {
+        Args: { p_end_date?: string; p_event_id: string; p_start_date?: string }
+        Returns: {
+          change_percentage: number
+          metric_name: string
+          metric_value: number
+          previous_value: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
