@@ -8,9 +8,9 @@ import {
 } from 'lucide-react';
 
 const menuItems = [
+  { title: 'Dashboard', url: '/admin', icon: BarChart3 },
   { title: 'Organizações', url: '/admin/organizations', icon: Building2 },
   { title: 'Usuários', url: '/admin/users', icon: Users },
-  { title: 'Analytics Global', url: '/admin/analytics', icon: BarChart3 },
   { title: 'Configurações', url: '/admin/settings', icon: Settings },
   { title: 'Segurança', url: '/admin/security', icon: Shield },
 ];

@@ -14,6 +14,8 @@ import AuthPage from "./pages/auth/AuthPage";
 
 // Admin Pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import Organizations from "./pages/admin/Organizations";
+import Users from "./pages/admin/Users";
 
 // Client Pages (antigas páginas principais)
 import Dashboard from "./pages/Dashboard";
@@ -65,6 +67,8 @@ function AppRoutes() {
           <AdminLayout>
             <Routes>
               <Route index element={<AdminDashboard />} />
+              <Route path="organizations" element={<Organizations />} />
+              <Route path="users" element={<Users />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AdminLayout>
