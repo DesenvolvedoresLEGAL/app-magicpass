@@ -9,6 +9,8 @@ import { AuthProvider, useAuth } from "./hooks/useAuth";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import { AdminLayout } from "./components/layout/AdminLayout";
 import { ClientLayout } from "./components/layout/ClientLayout";
+import { TourProvider } from "./components/tour/TourProvider";
+import { OnboardingPage } from "./pages/onboarding/OnboardingPage";
 
 // Auth
 import AuthPage from "./pages/auth/AuthPage";
@@ -67,6 +69,9 @@ function AppRoutes() {
     <Routes>
       {/* Auth Route */}
       <Route path="/auth" element={<AuthPage />} />
+      
+      {/* Onboarding Route */}
+      <Route path="/onboarding" element={<OnboardingPage />} />
       
       {/* Root redirect based on user role */}
       <Route path="/" element={
@@ -133,8 +138,10 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <AppRoutes />
-          <PerformanceMonitor />
+          <TourProvider>
+            <AppRoutes />
+            <PerformanceMonitor />
+          </TourProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
