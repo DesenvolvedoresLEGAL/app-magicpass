@@ -80,6 +80,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "analytics_events_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "public_events"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "analytics_events_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
@@ -179,6 +186,13 @@ export type Database = {
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "analytics_sessions_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "public_events"
             referencedColumns: ["id"]
           },
           {
@@ -301,6 +315,13 @@ export type Database = {
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "discount_codes_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "public_events"
             referencedColumns: ["id"]
           },
         ]
@@ -449,6 +470,13 @@ export type Database = {
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_analytics_summary_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "public_events"
             referencedColumns: ["id"]
           },
           {
@@ -606,6 +634,13 @@ export type Database = {
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_reports_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "public_events"
             referencedColumns: ["id"]
           },
         ]
@@ -784,6 +819,13 @@ export type Database = {
             referencedRelation: "events"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "orders_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "public_events"
+            referencedColumns: ["id"]
+          },
         ]
       }
       organizations: {
@@ -896,6 +938,13 @@ export type Database = {
             referencedRelation: "events"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "participants_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "public_events"
+            referencedColumns: ["id"]
+          },
         ]
       }
       payments: {
@@ -964,6 +1013,13 @@ export type Database = {
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "public_events"
             referencedColumns: ["id"]
           },
           {
@@ -1084,7 +1140,41 @@ export type Database = {
             referencedRelation: "events"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "pricing_tiers_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "public_events"
+            referencedColumns: ["id"]
+          },
         ]
+      }
+      registration_rate_limits: {
+        Row: {
+          created_at: string | null
+          event_id: string
+          id: string
+          ip_address: unknown
+          registration_count: number | null
+          window_start: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_id: string
+          id?: string
+          ip_address: unknown
+          registration_count?: number | null
+          window_start?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_id?: string
+          id?: string
+          ip_address?: unknown
+          registration_count?: number | null
+          window_start?: string | null
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {
@@ -1240,6 +1330,51 @@ export type Database = {
           },
         ]
       }
+      public_events: {
+        Row: {
+          allow_reentry: boolean | null
+          capacity: number | null
+          description: string | null
+          end_date: string | null
+          id: string | null
+          lgpd_text: string | null
+          location: string | null
+          name: string | null
+          registration_fields: Json | null
+          start_date: string | null
+          status: string | null
+          ticket_categories: Json | null
+        }
+        Insert: {
+          allow_reentry?: boolean | null
+          capacity?: number | null
+          description?: string | null
+          end_date?: string | null
+          id?: string | null
+          lgpd_text?: string | null
+          location?: string | null
+          name?: string | null
+          registration_fields?: Json | null
+          start_date?: string | null
+          status?: string | null
+          ticket_categories?: Json | null
+        }
+        Update: {
+          allow_reentry?: boolean | null
+          capacity?: number | null
+          description?: string | null
+          end_date?: string | null
+          id?: string | null
+          lgpd_text?: string | null
+          location?: string | null
+          name?: string | null
+          registration_fields?: Json | null
+          start_date?: string | null
+          status?: string | null
+          ticket_categories?: Json | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       calculate_event_analytics: {
@@ -1250,6 +1385,15 @@ export type Database = {
           metric_value: number
           previous_value: number
         }[]
+      }
+      check_registration_rate_limit: {
+        Args: {
+          p_event_id: string
+          p_ip_address: unknown
+          p_max_registrations?: number
+          p_window_minutes?: number
+        }
+        Returns: boolean
       }
       get_event_stats_cached: {
         Args: { p_event_id: string }
@@ -1305,6 +1449,15 @@ export type Database = {
           ticket_category: string
           total_count: number
         }[]
+      }
+      validate_participant_data: {
+        Args: {
+          p_document?: string
+          p_email: string
+          p_name: string
+          p_phone?: string
+        }
+        Returns: boolean
       }
     }
     Enums: {
