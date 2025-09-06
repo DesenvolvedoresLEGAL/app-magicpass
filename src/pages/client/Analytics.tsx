@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import { usePerformance } from '@/hooks/usePerformance';
 
 interface AnalyticsData {
   conversationFunnel: Array<{ name: string; value: number; color: string }>;
@@ -27,6 +28,7 @@ interface AnalyticsData {
 
 export function Analytics() {
   const { organizationId } = useAuth();
+  const { recordMetric } = usePerformance();
   const [loading, setLoading] = useState(true);
   const [selectedPeriod, setSelectedPeriod] = useState('30d');
   const [selectedEvent, setSelectedEvent] = useState('all');
@@ -67,13 +69,33 @@ export function Analytics() {
     try {
       const period = selectedPeriod;
       const eventId = selectedEvent !== 'all' ? selectedEvent : null;
+      const cacheKey = `analytics:${organizationId}:${eventId ?? 'all'}:${period}`;
+
+      // Cache inteligente (5 minutos)
+      const cached = sessionStorage.getItem(cacheKey);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Date.now() - parsed.ts < 5 * 60 * 1000) {
+          setData(parsed.data as AnalyticsData);
+          setLoading(false);
+          return;
+        }
+      }
+
+      const t0 = performance.now();
       const { data: result, error } = await supabase.functions.invoke('analytics-summary', {
         body: { organizationId, period, eventId },
       });
+      const duration = performance.now() - t0;
+      recordMetric('api_response', 'analytics-summary', Math.round(duration), 'ms', { period, eventId });
+
       if (error) throw error;
       setData(result as AnalyticsData);
+      // salva no cache
+      sessionStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data: result }));
     } catch (e) {
       console.error('Erro ao carregar analytics:', e);
+      recordMetric('error_rate', 'analytics-summary', 1, 'count');
       // Fallback seguro para evitar tela em branco
       setData({
         conversationFunnel: [],
