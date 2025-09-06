@@ -1,1 +1,7 @@
 project_id = "msbphnimxpohgwbnqwoo"
+
+[functions.send-notification]
+verify_jwt = false
+
+[functions.process-webhook]
+verify_jwt = false
