@@ -1,5 +1,4 @@
 import { Search, User, Bell } from 'lucide-react';
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -16,8 +15,6 @@ export function TopBar() {
   return (
     <header className="relative z-40 border-b bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/60">
       <div className="flex h-16 items-center gap-4 px-6">
-        <SidebarTrigger />
-        
         {/* Search */}
         <div className="flex-1 max-w-md">
           <div className="relative">
