@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      email_templates: {
+        Row: {
+          active: boolean | null
+          created_at: string
+          html_content: string
+          id: string
+          name: string
+          organization_id: string
+          subject: string
+          type: string
+          updated_at: string
+          variables: Json | null
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string
+          html_content: string
+          id?: string
+          name: string
+          organization_id: string
+          subject: string
+          type: string
+          updated_at?: string
+          variables?: Json | null
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string
+          html_content?: string
+          id?: string
+          name?: string
+          organization_id?: string
+          subject?: string
+          type?: string
+          updated_at?: string
+          variables?: Json | null
+        }
+        Relationships: []
+      }
       events: {
         Row: {
           allow_reentry: boolean | null
@@ -81,6 +120,57 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          event_id: string | null
+          id: string
+          message: string
+          metadata: Json | null
+          organization_id: string
+          participant_id: string | null
+          retry_count: number | null
+          sent_at: string | null
+          status: string | null
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          event_id?: string | null
+          id?: string
+          message: string
+          metadata?: Json | null
+          organization_id: string
+          participant_id?: string | null
+          retry_count?: number | null
+          sent_at?: string | null
+          status?: string | null
+          title: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          event_id?: string | null
+          id?: string
+          message?: string
+          metadata?: Json | null
+          organization_id?: string
+          participant_id?: string | null
+          retry_count?: number | null
+          sent_at?: string | null
+          status?: string | null
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       organizations: {
         Row: {
@@ -223,6 +313,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      webhook_configs: {
+        Row: {
+          active: boolean | null
+          created_at: string
+          event_id: string
+          events: string[]
+          id: string
+          retry_count: number | null
+          secret: string | null
+          timeout_seconds: number | null
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string
+          event_id: string
+          events?: string[]
+          id?: string
+          retry_count?: number | null
+          secret?: string | null
+          timeout_seconds?: number | null
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string
+          event_id?: string
+          events?: string[]
+          id?: string
+          retry_count?: number | null
+          secret?: string | null
+          timeout_seconds?: number | null
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
       }
     }
     Views: {
