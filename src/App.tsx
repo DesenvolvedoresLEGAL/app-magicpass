@@ -55,7 +55,7 @@ const queryClient = new QueryClient({
 });
 
 function AppRoutes() {
-  const { user, userRole, loading } = useAuth();
+  const { user, userRole, organizationId, loading } = useAuth();
 
   if (loading) {
     return (
@@ -73,15 +73,22 @@ function AppRoutes() {
       {/* Onboarding Route */}
       <Route path="/onboarding" element={<OnboardingPage />} />
       
-      {/* Root redirect based on user role */}
+      {/* Root redirect based on user authentication status */}
       <Route path="/" element={
-        user && userRole ? (
-          userRole === 'legal_admin' ? (
-            <Navigate to="/admin" replace />
+        user ? (
+          userRole && organizationId ? (
+            // User has complete profile - redirect to appropriate dashboard
+            userRole === 'legal_admin' ? (
+              <Navigate to="/admin" replace />
+            ) : (
+              <Navigate to="/client" replace />
+            )
           ) : (
-            <Navigate to="/client" replace />
+            // User is authenticated but needs profile setup - redirect to onboarding
+            <Navigate to="/onboarding" replace />
           )
         ) : (
+          // No user - redirect to auth
           <Navigate to="/auth" replace />
         )
       } />

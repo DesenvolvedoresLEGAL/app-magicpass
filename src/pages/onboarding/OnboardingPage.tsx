@@ -24,15 +24,47 @@ export function OnboardingPage() {
 
   const handleOnboardingComplete = async () => {
     try {
-      // If user doesn't have an organization, they need proper account setup
+      // If user doesn't have profile setup yet, create it during onboarding
       if (!organizationId || !userRole) {
-        toast({
-          title: "Configuração pendente",
-          description: "Sua conta precisa ser configurada por um administrador antes de continuar.",
-          variant: "destructive"
-        });
-        navigate('/auth');
-        return;
+        // Create user profile using the setup function
+        if (user?.email && onboardingData.companyName) {
+          try {
+            const { data, error } = await supabase.rpc('setup_user_profile', {
+              user_email: user.email,
+              user_name: onboardingData.companyName || 'Usuário',
+              user_role: 'client_admin'
+            });
+
+            if (error) {
+              console.error('Error setting up user profile:', error);
+              toast({
+                title: "Erro na configuração",
+                description: "Não foi possível configurar seu perfil. Tente novamente.",
+                variant: "destructive"
+              });
+              return;
+            }
+
+            // Refresh the page to load the new profile
+            window.location.reload();
+            return;
+          } catch (setupError) {
+            console.error('Exception setting up profile:', setupError);
+            toast({
+              title: "Erro na configuração",
+              description: "Não foi possível configurar seu perfil. Tente novamente.",
+              variant: "destructive"
+            });
+            return;
+          }
+        } else {
+          toast({
+            title: "Dados incompletos",
+            description: "Por favor, preencha todos os dados necessários para continuar.",
+            variant: "destructive"
+          });
+          return;
+        }
       }
 
       // Save organization data to Supabase
@@ -101,90 +133,33 @@ export function OnboardingPage() {
     }
   };
 
-  // Debug: Log current state
-  console.log('OnboardingPage - Debug State:', {
-    user: !!user,
-    userRole,
-    organizationId,
-    isOnboardingActive,
-    currentPath: window.location.pathname
-  });
-
-  // Redirect users without proper authentication
+  // Redirect users without proper authentication  
   if (!user) {
-    console.log('OnboardingPage - No user, redirecting to auth');
     navigate('/auth');
     return null;
   }
 
-  // If user doesn't have valid profile, show them the UserOnboarding component instead
+  // For users without profile, start the onboarding process
   if (!userRole || !organizationId) {
-    console.log('OnboardingPage - No userRole/organizationId, redirecting to auth');
-    navigate('/auth');
-    return null;
-  }
-
-  if (!isOnboardingActive) {
-    console.log('OnboardingPage - Onboarding not active, redirecting based on role');
-    // Redirect based on user role
-    if (userRole === 'legal_admin') {
-      navigate('/admin');
-    } else {
-      navigate('/client');
+    // Auto-activate onboarding for users without proper profiles
+    if (!isOnboardingActive) {
+      useOnboardingStore.setState({ isOnboardingActive: true });
     }
-    return null;
+  } else {
+    // User has complete profile but onboarding is still active - redirect to dashboard
+    if (!isOnboardingActive) {
+      if (userRole === 'legal_admin') {
+        navigate('/admin');
+      } else {
+        navigate('/client');
+      }
+      return null;
+    }
   }
 
-  // Show debug info temporarily to understand the issue
   return (
     <div className="min-h-screen bg-background">
-      <div className="p-8">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-2xl font-bold mb-4">Debug: Onboarding State</h1>
-          <div className="bg-card border rounded-lg p-6 mb-6">
-            <pre className="text-sm overflow-auto">
-              {JSON.stringify({
-                user: !!user,
-                userEmail: user?.email,
-                userRole,
-                organizationId,
-                isOnboardingActive,
-                currentStep: useOnboardingStore.getState().currentStep,
-                totalSteps: useOnboardingStore.getState().totalSteps,
-                onboardingData: useOnboardingStore.getState().onboardingData,
-                localStorage: localStorage.getItem('onboarding-storage'),
-                currentPath: window.location.pathname
-              }, null, 2)}
-            </pre>
-          </div>
-          <div className="space-y-4">
-            <button 
-              onClick={() => {
-                console.log('Forcing onboarding active');
-                useOnboardingStore.setState({ isOnboardingActive: true });
-                window.location.reload();
-              }}
-              className="bg-primary text-primary-foreground px-4 py-2 rounded mr-4"
-            >
-              Force Activate Onboarding
-            </button>
-            <button 
-              onClick={() => {
-                console.log('Resetting onboarding');
-                useOnboardingStore.getState().resetOnboarding();
-                window.location.reload();
-              }}
-              className="bg-destructive text-destructive-foreground px-4 py-2 rounded mr-4"
-            >
-              Reset Onboarding
-            </button>
-          </div>
-        </div>
-      </div>
-      
-      {isOnboardingActive && (
-        <OnboardingWizard onClose={handleOnboardingComplete} />
-      )}
+      <OnboardingWizard onClose={handleOnboardingComplete} />
     </div>
   );
 }

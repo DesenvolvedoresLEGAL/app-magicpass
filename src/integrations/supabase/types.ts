@@ -1494,6 +1494,15 @@ export type Database = {
           total_count: number
         }[]
       }
+      setup_user_profile: {
+        Args: {
+          org_id?: string
+          user_email: string
+          user_name: string
+          user_role?: string
+        }
+        Returns: string
+      }
       validate_participant_data: {
         Args: {
           p_document?: string

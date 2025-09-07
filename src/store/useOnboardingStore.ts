@@ -86,7 +86,7 @@ export const useOnboardingStore = create<OnboardingStore>()(
     (set, get) => ({
       // Initial State
       currentStep: 0,
-      totalSteps: 6, // Fixed: Should be 6 steps (0-5)
+      totalSteps: 5,
       isOnboardingActive: false,
       onboardingData: initialOnboardingData,
       
