@@ -45,7 +45,7 @@ export function CompanySetupStep({ onValidationChange }: CompanySetupStepProps) 
     companyName: onboardingData.companyName,
     companyType: onboardingData.companyType,
     accessVolume: onboardingData.accessVolume,
-    accessGoals: onboardingData.accessGoals
+    accessGoals: onboardingData.accessGoals || []
   });
 
   useEffect(() => {
@@ -65,7 +65,7 @@ export function CompanySetupStep({ onValidationChange }: CompanySetupStepProps) 
   };
 
   const handleGoalToggle = (goalValue: string) => {
-    const currentGoals = localData.accessGoals;
+    const currentGoals = localData.accessGoals || [];
     const updatedGoals = currentGoals.includes(goalValue)
       ? currentGoals.filter(g => g !== goalValue)
       : [...currentGoals, goalValue];
@@ -176,18 +176,18 @@ export function CompanySetupStep({ onValidationChange }: CompanySetupStepProps) 
                 key={goal.value}
                 onClick={() => handleGoalToggle(goal.value)}
                 className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                  localData.accessGoals.includes(goal.value)
+                  (localData.accessGoals || []).includes(goal.value)
                     ? 'border-primary bg-primary/5'
                     : 'border-border hover:border-primary/50'
                 }`}
               >
                 <div className="flex items-center gap-2">
                   <div className={`w-4 h-4 rounded border-2 transition-colors ${
-                    localData.accessGoals.includes(goal.value)
+                    (localData.accessGoals || []).includes(goal.value)
                       ? 'border-primary bg-primary'
                       : 'border-border'
                   }`}>
-                    {localData.accessGoals.includes(goal.value) && (
+                    {(localData.accessGoals || []).includes(goal.value) && (
                       <div className="w-full h-full flex items-center justify-center">
                         <div className="w-2 h-2 bg-white rounded-full" />
                       </div>
@@ -219,9 +219,9 @@ export function CompanySetupStep({ onValidationChange }: CompanySetupStepProps) 
                 {companyTypes.find(t => t.value === localData.companyType)?.label}
                 {localData.accessVolume && ` • ${accessVolumes.find(v => v.value === localData.accessVolume)?.label}`}
               </p>
-              {localData.accessGoals.length > 0 && (
+              {(localData.accessGoals || []).length > 0 && (
                 <p className="text-xs text-muted-foreground mt-1">
-                  Objetivos: {localData.accessGoals.map(g => accessGoalOptions.find(opt => opt.value === g)?.label).join(', ')}
+                  Objetivos: {(localData.accessGoals || []).map(g => accessGoalOptions.find(opt => opt.value === g)?.label).join(', ')}
                 </p>
               )}
             </div>
