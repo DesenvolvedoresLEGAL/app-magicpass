@@ -9,6 +9,11 @@ export interface OnboardingStep {
 }
 
 export interface OnboardingData {
+  // User information
+  userName: string;
+  userEmail: string;
+  userPassword: string;
+  
   // Company Setup
   companyName: string;
   companyType: string;
@@ -68,6 +73,9 @@ export interface OnboardingStore {
 }
 
 const initialOnboardingData: OnboardingData = {
+  userName: '',
+  userEmail: '',
+  userPassword: '',
   companyName: '',
   companyType: '',
   accessVolume: '',
@@ -88,7 +96,7 @@ export const useOnboardingStore = create<OnboardingStore>()(
     (set, get) => ({
       // Initial State
       currentStep: 0,
-      totalSteps: 6,
+      totalSteps: 7,
       isOnboardingActive: false,
       onboardingData: initialOnboardingData,
       

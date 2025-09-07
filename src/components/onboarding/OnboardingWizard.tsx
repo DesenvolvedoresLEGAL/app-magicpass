@@ -4,6 +4,7 @@ import { useOnboardingStore } from '@/store/useOnboardingStore';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { X, ArrowLeft, ArrowRight, CheckCircle } from 'lucide-react';
+import { UserCreationStep } from './steps/UserCreationStep';
 import { WelcomeStep } from './steps/WelcomeStep';
 import { CompanySetupStep } from './steps/CompanySetupStep';
 import { BrandingStep } from './steps/BrandingStep';
@@ -14,6 +15,7 @@ import { useAuth } from '@/hooks/useAuth';
 import confetti from 'canvas-confetti';
 
 const steps = [
+  { id: 'user', component: UserCreationStep, title: 'Criar Conta' },
   { id: 'welcome', component: WelcomeStep, title: 'Bem-vindo!' },
   { id: 'company', component: CompanySetupStep, title: 'Sua Organização' },
   { id: 'branding', component: BrandingStep, title: 'Identidade Visual' },
@@ -76,7 +78,7 @@ export function OnboardingWizard({ onClose }: OnboardingWizardProps) {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-card border rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden"
+        className="bg-card border rounded-xl shadow-2xl w-full max-w-4xl h-[90vh] flex flex-col overflow-hidden"
       >
         {/* Header */}
         <div className="border-b p-6 flex items-center justify-between">
@@ -113,21 +115,23 @@ export function OnboardingWizard({ onClose }: OnboardingWizardProps) {
         </div>
 
         {/* Content */}
-        <div className="p-6 min-h-[400px] flex flex-col">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentStep}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-              className="flex-1"
-            >
-              {CurrentStepComponent && (
-                <CurrentStepComponent onValidationChange={setIsValid} />
-              )}
-            </motion.div>
-          </AnimatePresence>
+        <div className="flex-1 overflow-auto">
+          <div className="p-6 min-h-full flex flex-col">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentStep}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+                className="flex-1"
+              >
+                {CurrentStepComponent && (
+                  <CurrentStepComponent onValidationChange={setIsValid} />
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
 
         {/* Footer */}

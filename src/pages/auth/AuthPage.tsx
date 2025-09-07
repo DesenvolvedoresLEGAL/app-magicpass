@@ -48,8 +48,10 @@ export default function AuthPage() {
       } else if (!isLogin) {
         toast({
           title: 'Sucesso',
-          description: 'Conta criada! Verifique seu email para confirmar.',
+          description: 'Conta criada! Redirecionando para configuração...',
         });
+        // Redirect to onboarding for new users
+        window.location.href = '/onboarding';
       }
     } catch (error) {
       toast({

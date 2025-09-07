@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { useOnboardingStore } from '@/store/useOnboardingStore';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -22,28 +23,28 @@ export function SuccessStep({ onValidationChange }: SuccessStepProps) {
       title: 'Acesse o Dashboard',
       description: 'Visualize métricas e gerencie seus acessos',
       action: 'Ir para Dashboard',
-      href: '/client/dashboard'
+      href: '/client'
     },
     {
       icon: <Scan className="h-5 w-5 text-primary" />,
       title: 'Configurar Câmeras',
       description: 'Configure o reconhecimento facial e QR codes',
       action: 'Configurar Acesso',
-      href: '/client/configuracoes'
+      href: '/configuracoes'
     },
     {
       icon: <BarChart3 className="h-5 w-5 text-primary" />,
       title: 'Analytics',
       description: 'Acompanhe acessos e fluxo de pessoas',
       action: 'Ver Analytics',
-      href: '/client/analytics'
+      href: '/relatorios'
     },
     {
       icon: <Users className="h-5 w-5 text-primary" />,
       title: 'Cadastrar Usuários',
       description: 'Adicione pessoas autorizadas ao sistema',
       action: 'Gerenciar Usuários',
-      href: '/client/usuarios'
+      href: '/credenciamento'
     }
   ];
 
@@ -173,10 +174,10 @@ export function SuccessStep({ onValidationChange }: SuccessStepProps) {
                         className="text-xs"
                         asChild
                       >
-                        <a href={step.href} className="flex items-center gap-1">
+                        <Link to={step.href} className="flex items-center gap-1">
                           {step.action}
                           <ExternalLink className="h-3 w-3" />
-                        </a>
+                        </Link>
                       </Button>
                     </div>
                   </div>
