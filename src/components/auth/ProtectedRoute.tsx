@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { UserOnboarding } from './UserOnboarding';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -13,7 +14,7 @@ export function ProtectedRoute({
   requiredRole, 
   requireAuth = true 
 }: ProtectedRouteProps) {
-  const { user, userRole, loading } = useAuth();
+  const { user, userRole, organizationId, loading, signOut } = useAuth();
 
   if (loading) {
     return (
@@ -25,6 +26,16 @@ export function ProtectedRoute({
 
   if (requireAuth && !user) {
     return <Navigate to="/auth" replace />;
+  }
+
+  // Security fix: Handle users without proper profile setup
+  if (user && (!userRole || !organizationId)) {
+    return (
+      <UserOnboarding 
+        userEmail={user.email || ''} 
+        onComplete={() => signOut()} 
+      />
+    );
   }
 
   if (requiredRole && userRole) {

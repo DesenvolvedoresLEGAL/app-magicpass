@@ -1149,6 +1149,33 @@ export type Database = {
           },
         ]
       }
+      registration_attempts: {
+        Row: {
+          attempt_count: number | null
+          created_at: string | null
+          event_id: string
+          id: string
+          ip_address: unknown
+          window_start: string | null
+        }
+        Insert: {
+          attempt_count?: number | null
+          created_at?: string | null
+          event_id: string
+          id?: string
+          ip_address: unknown
+          window_start?: string | null
+        }
+        Update: {
+          attempt_count?: number | null
+          created_at?: string | null
+          event_id?: string
+          id?: string
+          ip_address?: unknown
+          window_start?: string | null
+        }
+        Relationships: []
+      }
       registration_rate_limits: {
         Row: {
           created_at: string | null
