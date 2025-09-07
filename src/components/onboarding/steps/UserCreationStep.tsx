@@ -12,6 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { UserPlus, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const userSchema = z.object({
   name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
@@ -87,10 +88,28 @@ export function UserCreationStep({ onValidationChange }: UserCreationStepProps) 
           userEmail: data.email,
           userPassword: data.password
         });
+
+        // Wait a moment for auth state to update
+        setTimeout(async () => {
+          try {
+            // Create user profile with role and organization
+            const { error: profileError } = await supabase.rpc('setup_user_profile', {
+              user_email: data.email,
+              user_name: data.name,
+              user_role: 'client_admin'
+            });
+
+            if (profileError) {
+              console.error('Error setting up profile:', profileError);
+            }
+          } catch (err) {
+            console.error('Profile setup error:', err);
+          }
+        }, 1000);
         
         toast({
           title: 'Conta criada!',
-          description: 'Verifique seu email para confirmar a conta. Você pode continuar o onboarding.',
+          description: 'Você pode continuar o onboarding.',
         });
       }
     } catch (error) {

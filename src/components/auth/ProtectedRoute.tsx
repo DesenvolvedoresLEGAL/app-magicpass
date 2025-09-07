@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { UserOnboarding } from './UserOnboarding';
+import { useOnboardingStore } from '@/store/useOnboardingStore';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -15,6 +16,7 @@ export function ProtectedRoute({
   requireAuth = true 
 }: ProtectedRouteProps) {
   const { user, userRole, organizationId, loading, signOut } = useAuth();
+  const { isOnboardingActive } = useOnboardingStore();
 
   if (loading) {
     return (
@@ -30,6 +32,11 @@ export function ProtectedRoute({
 
   // Security fix: Handle users without proper profile setup
   if (user && (!userRole || !organizationId)) {
+    // Allow access to onboarding if it's active
+    if (isOnboardingActive) {
+      return <>{children}</>;
+    }
+    
     return (
       <UserOnboarding 
         userEmail={user.email || ''} 

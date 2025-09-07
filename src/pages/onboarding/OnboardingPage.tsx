@@ -24,14 +24,13 @@ export function OnboardingPage() {
 
   const handleOnboardingComplete = async () => {
     try {
-      // If user doesn't have profile setup yet, create it during onboarding
+      // Ensure user profile is complete
       if (!organizationId || !userRole) {
-        // Create user profile using the setup function
-        if (user?.email && onboardingData.companyName) {
+        if (user?.email && onboardingData.userName) {
           try {
-            const { data, error } = await supabase.rpc('setup_user_profile', {
+            const { error } = await supabase.rpc('setup_user_profile', {
               user_email: user.email,
-              user_name: onboardingData.companyName || 'Usuário',
+              user_name: onboardingData.userName || 'Usuário',
               user_role: 'client_admin'
             });
 
@@ -44,10 +43,6 @@ export function OnboardingPage() {
               });
               return;
             }
-
-            // Refresh the page to load the new profile
-            window.location.reload();
-            return;
           } catch (setupError) {
             console.error('Exception setting up profile:', setupError);
             toast({
@@ -57,13 +52,6 @@ export function OnboardingPage() {
             });
             return;
           }
-        } else {
-          toast({
-            title: "Dados incompletos",
-            description: "Por favor, preencha todos os dados necessários para continuar.",
-            variant: "destructive"
-          });
-          return;
         }
       }
 
@@ -116,12 +104,10 @@ export function OnboardingPage() {
         description: "Sua conta foi configurada com sucesso. Bem-vindo à plataforma!",
       });
       
-      // Redirect based on user role
-      if (userRole === 'legal_admin') {
-        navigate('/admin');
-      } else {
-        navigate('/client');
-      }
+      // Wait for state to update and then redirect
+      setTimeout(() => {
+        window.location.href = '/client';
+      }, 500);
       
     } catch (error) {
       console.error('Error completing onboarding:', error);
