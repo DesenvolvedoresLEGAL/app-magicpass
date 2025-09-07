@@ -1434,6 +1434,20 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      register_participant: {
+        Args: {
+          p_document?: string
+          p_email: string
+          p_event_id: string
+          p_lgpd_consent?: boolean
+          p_name: string
+          p_phone?: string
+          p_photo_url?: string
+          p_registration_data?: Json
+          p_ticket_category?: string
+        }
+        Returns: string
+      }
       search_participants: {
         Args: {
           p_event_id: string
