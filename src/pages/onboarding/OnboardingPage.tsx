@@ -8,7 +8,7 @@ import { toast } from '@/hooks/use-toast';
 
 export function OnboardingPage() {
   const navigate = useNavigate();
-  const { user, organizationId } = useAuth();
+  const { user, userRole, organizationId } = useAuth();
   const { 
     isOnboardingActive,
     onboardingData,
@@ -24,6 +24,17 @@ export function OnboardingPage() {
 
   const handleOnboardingComplete = async () => {
     try {
+      // If user doesn't have an organization, they need proper account setup
+      if (!organizationId || !userRole) {
+        toast({
+          title: "Configuração pendente",
+          description: "Sua conta precisa ser configurada por um administrador antes de continuar.",
+          variant: "destructive"
+        });
+        navigate('/auth');
+        return;
+      }
+
       // Save organization data to Supabase
       if (onboardingData.companyName && organizationId) {
         const { error: orgError } = await supabase
@@ -73,8 +84,12 @@ export function OnboardingPage() {
         description: "Sua conta foi configurada com sucesso. Bem-vindo à plataforma!",
       });
       
-      // Redirect to dashboard
-      navigate('/client/dashboard');
+      // Redirect based on user role
+      if (userRole === 'legal_admin') {
+        navigate('/admin');
+      } else {
+        navigate('/client');
+      }
       
     } catch (error) {
       console.error('Error completing onboarding:', error);
@@ -86,13 +101,25 @@ export function OnboardingPage() {
     }
   };
 
+  // Redirect users without proper authentication
   if (!user) {
     navigate('/auth');
     return null;
   }
 
+  // If user doesn't have valid profile, show them the UserOnboarding component instead
+  if (!userRole || !organizationId) {
+    navigate('/auth');
+    return null;
+  }
+
   if (!isOnboardingActive) {
-    navigate('/client/dashboard');
+    // Redirect based on user role
+    if (userRole === 'legal_admin') {
+      navigate('/admin');
+    } else {
+      navigate('/client');
+    }
     return null;
   }
 
