@@ -101,19 +101,31 @@ export function OnboardingPage() {
     }
   };
 
+  // Debug: Log current state
+  console.log('OnboardingPage - Debug State:', {
+    user: !!user,
+    userRole,
+    organizationId,
+    isOnboardingActive,
+    currentPath: window.location.pathname
+  });
+
   // Redirect users without proper authentication
   if (!user) {
+    console.log('OnboardingPage - No user, redirecting to auth');
     navigate('/auth');
     return null;
   }
 
   // If user doesn't have valid profile, show them the UserOnboarding component instead
   if (!userRole || !organizationId) {
+    console.log('OnboardingPage - No userRole/organizationId, redirecting to auth');
     navigate('/auth');
     return null;
   }
 
   if (!isOnboardingActive) {
+    console.log('OnboardingPage - Onboarding not active, redirecting based on role');
     // Redirect based on user role
     if (userRole === 'legal_admin') {
       navigate('/admin');
@@ -123,9 +135,56 @@ export function OnboardingPage() {
     return null;
   }
 
+  // Show debug info temporarily to understand the issue
   return (
     <div className="min-h-screen bg-background">
-      <OnboardingWizard onClose={handleOnboardingComplete} />
+      <div className="p-8">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-2xl font-bold mb-4">Debug: Onboarding State</h1>
+          <div className="bg-card border rounded-lg p-6 mb-6">
+            <pre className="text-sm overflow-auto">
+              {JSON.stringify({
+                user: !!user,
+                userEmail: user?.email,
+                userRole,
+                organizationId,
+                isOnboardingActive,
+                currentStep: useOnboardingStore.getState().currentStep,
+                totalSteps: useOnboardingStore.getState().totalSteps,
+                onboardingData: useOnboardingStore.getState().onboardingData,
+                localStorage: localStorage.getItem('onboarding-storage'),
+                currentPath: window.location.pathname
+              }, null, 2)}
+            </pre>
+          </div>
+          <div className="space-y-4">
+            <button 
+              onClick={() => {
+                console.log('Forcing onboarding active');
+                useOnboardingStore.setState({ isOnboardingActive: true });
+                window.location.reload();
+              }}
+              className="bg-primary text-primary-foreground px-4 py-2 rounded mr-4"
+            >
+              Force Activate Onboarding
+            </button>
+            <button 
+              onClick={() => {
+                console.log('Resetting onboarding');
+                useOnboardingStore.getState().resetOnboarding();
+                window.location.reload();
+              }}
+              className="bg-destructive text-destructive-foreground px-4 py-2 rounded mr-4"
+            >
+              Reset Onboarding
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      {isOnboardingActive && (
+        <OnboardingWizard onClose={handleOnboardingComplete} />
+      )}
     </div>
   );
 }
