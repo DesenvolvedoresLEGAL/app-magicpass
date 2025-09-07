@@ -59,6 +59,7 @@ export interface OnboardingStore {
   
   // Actions
   setCurrentStep: (step: number) => void;
+  setIsOnboardingActive: (active: boolean) => void;
   nextStep: () => void;
   prevStep: () => void;
   updateOnboardingData: (data: Partial<OnboardingData>) => void;
@@ -107,6 +108,8 @@ export const useOnboardingStore = create<OnboardingStore>()(
       
       // Onboarding Actions
       setCurrentStep: (step) => set({ currentStep: step }),
+      
+      setIsOnboardingActive: (active) => set({ isOnboardingActive: active }),
       
       nextStep: () => set((state) => ({ 
         currentStep: Math.min(state.currentStep + 1, state.totalSteps - 1) 

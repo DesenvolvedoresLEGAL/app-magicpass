@@ -26,6 +26,11 @@ export function ProtectedRoute({
     );
   }
 
+  // Special case: Allow unauthenticated access to onboarding
+  if (window.location.pathname === '/onboarding') {
+    return <>{children}</>;
+  }
+
   if (requireAuth && !user) {
     return <Navigate to="/auth" replace />;
   }

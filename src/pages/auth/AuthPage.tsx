@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,12 +8,12 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 
 export default function AuthPage() {
-  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { user, userRole, signIn, signUp } = useAuth();
+  const { user, userRole, signIn } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   // Redirect authenticated users based on their role
   useEffect(() => {
@@ -35,9 +35,7 @@ export default function AuthPage() {
     setLoading(true);
 
     try {
-      const { error } = isLogin 
-        ? await signIn(email, password)
-        : await signUp(email, password);
+      const { error } = await signIn(email, password);
 
       if (error) {
         toast({
@@ -45,13 +43,6 @@ export default function AuthPage() {
           description: error.message,
           variant: 'destructive',
         });
-      } else if (!isLogin) {
-        toast({
-          title: 'Sucesso',
-          description: 'Conta criada! Redirecionando para configuração...',
-        });
-        // Redirect to onboarding for new users
-        window.location.href = '/onboarding';
       }
     } catch (error) {
       toast({
@@ -64,13 +55,17 @@ export default function AuthPage() {
     }
   };
 
+  const handleCreateAccount = () => {
+    navigate('/onboarding');
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">MagicPass</CardTitle>
           <CardDescription>
-            {isLogin ? 'Entre em sua conta' : 'Crie sua conta'}
+            Entre em sua conta
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -102,20 +97,17 @@ export default function AuthPage() {
               className="w-full" 
               disabled={loading}
             >
-              {loading ? 'Carregando...' : (isLogin ? 'Entrar' : 'Criar conta')}
+              {loading ? 'Carregando...' : 'Entrar'}
             </Button>
           </form>
           
           <div className="mt-4 text-center">
             <Button
               variant="link"
-              onClick={() => setIsLogin(!isLogin)}
+              onClick={handleCreateAccount}
               className="text-sm"
             >
-              {isLogin 
-                ? 'Não tem conta? Criar uma' 
-                : 'Já tem conta? Fazer login'
-              }
+              Não tem conta? Criar uma
             </Button>
           </div>
         </CardContent>

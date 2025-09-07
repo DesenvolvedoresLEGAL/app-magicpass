@@ -11,16 +11,17 @@ export function OnboardingPage() {
   const { user, userRole, organizationId } = useAuth();
   const { 
     isOnboardingActive,
+    setIsOnboardingActive,
     onboardingData,
     completeOnboarding 
   } = useOnboardingStore();
 
+  // Activate onboarding automatically for all users accessing this page
   useEffect(() => {
-    // Auto-start onboarding for new users
-    if (user && !isOnboardingActive) {
-      useOnboardingStore.setState({ isOnboardingActive: true });
+    if (!isOnboardingActive) {
+      setIsOnboardingActive(true);
     }
-  }, [user, isOnboardingActive]);
+  }, [isOnboardingActive, setIsOnboardingActive]);
 
   const handleOnboardingComplete = async () => {
     try {
@@ -119,28 +120,14 @@ export function OnboardingPage() {
     }
   };
 
-  // Redirect users without proper authentication  
-  if (!user) {
-    navigate('/auth');
+  // If user has complete profile and onboarding is not active, redirect to dashboard
+  if (user && userRole && organizationId && !isOnboardingActive) {
+    if (userRole === 'legal_admin') {
+      navigate('/admin');
+    } else {
+      navigate('/client');
+    }
     return null;
-  }
-
-  // For users without profile, start the onboarding process
-  if (!userRole || !organizationId) {
-    // Auto-activate onboarding for users without proper profiles
-    if (!isOnboardingActive) {
-      useOnboardingStore.setState({ isOnboardingActive: true });
-    }
-  } else {
-    // User has complete profile but onboarding is still active - redirect to dashboard
-    if (!isOnboardingActive) {
-      if (userRole === 'legal_admin') {
-        navigate('/admin');
-      } else {
-        navigate('/client');
-      }
-      return null;
-    }
   }
 
   return (
