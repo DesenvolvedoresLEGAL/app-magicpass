@@ -58,10 +58,10 @@ const environmentTemplates = [
 export function AccessEnvironmentStep({ onValidationChange }: AccessEnvironmentStepProps) {
   const { onboardingData, updateOnboardingData } = useOnboardingStore();
   const [localData, setLocalData] = useState({
-    environmentName: onboardingData.environmentName,
-    environmentType: onboardingData.environmentType,
-    environmentDate: onboardingData.environmentDate,
-    environmentCapacity: onboardingData.environmentCapacity
+    environmentName: onboardingData.environmentName || '',
+    environmentType: onboardingData.environmentType || '',
+    environmentDate: onboardingData.environmentDate || '',
+    environmentCapacity: onboardingData.environmentCapacity || ''
   });
 
   useEffect(() => {
