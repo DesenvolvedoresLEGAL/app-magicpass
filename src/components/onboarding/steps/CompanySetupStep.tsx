@@ -52,7 +52,7 @@ export function CompanySetupStep({ onValidationChange }: CompanySetupStepProps) 
     const isValid = localData.companyName.trim().length > 0 && 
                    localData.companyType.length > 0 && 
                    localData.accessVolume.length > 0 &&
-                   localData.accessGoals.length > 0;
+                   (localData.accessGoals || []).length > 0;
     onValidationChange(isValid);
     
     if (isValid) {
