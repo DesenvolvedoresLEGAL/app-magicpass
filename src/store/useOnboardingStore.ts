@@ -88,7 +88,7 @@ export const useOnboardingStore = create<OnboardingStore>()(
     (set, get) => ({
       // Initial State
       currentStep: 0,
-      totalSteps: 5,
+      totalSteps: 6,
       isOnboardingActive: false,
       onboardingData: initialOnboardingData,
       
@@ -154,6 +154,18 @@ export const useOnboardingStore = create<OnboardingStore>()(
     }),
     {
       name: 'onboarding-storage',
+      version: 1, // Add version to force reset if needed
+      migrate: (persistedState: any, version: number) => {
+        // Reset if old version or missing new properties
+        if (version < 1 || !persistedState.onboardingData?.accessGoals) {
+          return {
+            ...persistedState,
+            onboardingData: initialOnboardingData,
+            completedTours: persistedState.completedTours || []
+          };
+        }
+        return persistedState;
+      },
       partialize: (state) => ({
         completedTours: state.completedTours,
         onboardingData: state.onboardingData,

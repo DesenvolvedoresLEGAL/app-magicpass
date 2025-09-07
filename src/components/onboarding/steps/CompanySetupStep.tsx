@@ -41,6 +41,10 @@ const accessGoalOptions = [
 
 export function CompanySetupStep({ onValidationChange }: CompanySetupStepProps) {
   const { onboardingData, updateOnboardingData } = useOnboardingStore();
+  
+  // Debug logging
+  console.log('CompanySetupStep onboardingData:', onboardingData);
+  
   const [localData, setLocalData] = useState({
     companyName: onboardingData.companyName || '',
     companyType: onboardingData.companyType || '',

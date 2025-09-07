@@ -57,6 +57,10 @@ const environmentTemplates = [
 
 export function AccessEnvironmentStep({ onValidationChange }: AccessEnvironmentStepProps) {
   const { onboardingData, updateOnboardingData } = useOnboardingStore();
+  
+  // Debug logging
+  console.log('AccessEnvironmentStep onboardingData:', onboardingData);
+  
   const [localData, setLocalData] = useState({
     environmentName: onboardingData.environmentName || '',
     environmentType: onboardingData.environmentType || '',
