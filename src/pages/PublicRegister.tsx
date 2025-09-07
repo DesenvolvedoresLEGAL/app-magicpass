@@ -314,30 +314,23 @@ export default function PublicRegister() {
       const photoPath = await uploadPhotoIfAny();
       const qr_code = generateQr(event.qr_prefix);
 
-      const { data, error } = await supabase
-        .from("participants")
-        .insert([
-          {
-            event_id: event.id,
-            name,
-            email,
-            phone: phone || null,
-            document: docNumber || null,
-            ticket_category: ticketCategory,
-            registration_data: dynamicValues,
-            qr_code,
-            photo_url: photoPath,
-            lgpd_consent: true,
-            lgpd_consent_date: new Date().toISOString(),
-            status: "registered",
-          },
-        ])
-        .select("qr_code")
-        .single();
+      // Security fix: Use the secure RPC function instead of direct insert
+      const { data, error } = await supabase.rpc('register_participant', {
+        p_event_id: event.id,
+        p_name: name,
+        p_email: email,
+        p_phone: phone || null,
+        p_document: docNumber || null,
+        p_ticket_category: ticketCategory,
+        p_registration_data: dynamicValues,
+        p_photo_url: photoPath,
+        p_lgpd_consent: true
+      });
 
       if (error) throw error;
 
-      setSuccessCode(data.qr_code);
+      // The RPC function returns the QR code directly as a string
+      setSuccessCode(data as string);
       toast.success("Inscrição realizada com sucesso!");
     } catch (err: any) {
       console.error(err);

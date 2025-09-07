@@ -30,7 +30,7 @@ serve(async (req) => {
 
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL") ?? "",
-    Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
     { auth: { persistSession: false } }
   );
 
@@ -43,11 +43,44 @@ serve(async (req) => {
       });
     }
 
+    // Security fix: Validate JWT and get user
+    const token = authHeader.replace("Bearer ", "");
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    
+    if (authError || !user) {
+      return new Response(JSON.stringify({ error: "Invalid authentication" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401,
+      });
+    }
+
+    // Verify user has access to the requested organization
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('organization_id, role')
+      .eq('auth_user_id', user.id)
+      .single();
+
+    if (userError || !userData) {
+      return new Response(JSON.stringify({ error: "User not found" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 403,
+      });
+    }
+
     const { organizationId, eventId, period } = await req.json();
     if (!organizationId) {
       return new Response(JSON.stringify({ error: "organizationId is required" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 400,
+      });
+    }
+
+    // Security fix: Ensure user can only access their own organization's data
+    if (organizationId !== userData.organization_id) {
+      return new Response(JSON.stringify({ error: "Access denied to this organization" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 403,
       });
     }
 

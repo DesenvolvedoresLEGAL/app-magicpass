@@ -29,40 +29,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSession(session);
         setUser(session?.user ?? null);
         
-        if (session?.user) {
-          // Fetch user profile and role
-          setTimeout(async () => {
-            try {
-              const { data: userData, error } = await supabase
-                .from('users')
-                .select('role, organization_id')
-                .eq('auth_user_id', session.user.id)
-                .maybeSingle();
-              
-              if (error) {
-                console.error('Error fetching user data:', error);
-                // Set default values for authenticated users without profile
-                setUserRole('client_admin');
-                setOrganizationId('demo-org-id');
-                return;
+          if (session?.user) {
+            // Fetch user profile and role
+            setTimeout(async () => {
+              try {
+                const { data: userData, error } = await supabase
+                  .from('users')
+                  .select('role, organization_id')
+                  .eq('auth_user_id', session.user.id)
+                  .maybeSingle();
+                
+                if (error) {
+                  console.error('Error fetching user data:', error);
+                  // Security fix: Don't automatically assign roles
+                  setUserRole(null);
+                  setOrganizationId(null);
+                  return;
+                }
+                
+                if (userData) {
+                  setUserRole(userData.role);
+                  setOrganizationId(userData.organization_id);
+                } else {
+                  // Security fix: User needs proper profile setup
+                  console.warn('User authenticated but no profile found - requires proper onboarding');
+                  setUserRole(null);
+                  setOrganizationId(null);
+                }
+              } catch (err) {
+                console.error('Exception fetching user data:', err);
+                // Security fix: Don't fall back to automatic privileges
+                setUserRole(null);
+                setOrganizationId(null);
               }
-              
-              if (userData) {
-                setUserRole(userData.role);
-                setOrganizationId(userData.organization_id);
-              } else {
-                // User exists in auth but not in users table - set defaults
-                console.warn('User authenticated but no profile found, using defaults');
-                setUserRole('client_admin');
-                setOrganizationId('demo-org-id');
-              }
-            } catch (err) {
-              console.error('Exception fetching user data:', err);
-              // Fallback to demo values to prevent app from breaking
-              setUserRole('client_admin');
-              setOrganizationId('demo-org-id');
-            }
-          }, 0);
+            }, 0);
         } else {
           setUserRole(null);
           setOrganizationId(null);
