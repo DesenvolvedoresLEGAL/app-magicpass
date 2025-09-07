@@ -8,17 +8,17 @@ import { WelcomeStep } from './steps/WelcomeStep';
 import { CompanySetupStep } from './steps/CompanySetupStep';
 import { BrandingStep } from './steps/BrandingStep';
 import { TeamStep } from './steps/TeamStep';
-import { FirstEventStep } from './steps/FirstEventStep';
+import { AccessEnvironmentStep } from './steps/AccessEnvironmentStep';
 import { SuccessStep } from './steps/SuccessStep';
 import { useAuth } from '@/hooks/useAuth';
 import confetti from 'canvas-confetti';
 
 const steps = [
   { id: 'welcome', component: WelcomeStep, title: 'Bem-vindo!' },
-  { id: 'company', component: CompanySetupStep, title: 'Sua Empresa' },
+  { id: 'company', component: CompanySetupStep, title: 'Sua Organização' },
   { id: 'branding', component: BrandingStep, title: 'Identidade Visual' },
   { id: 'team', component: TeamStep, title: 'Sua Equipe' },
-  { id: 'event', component: FirstEventStep, title: 'Primeiro Evento' },
+  { id: 'environment', component: AccessEnvironmentStep, title: 'Ambiente de Acesso' },
   { id: 'success', component: SuccessStep, title: 'Tudo Pronto!' }
 ];
 

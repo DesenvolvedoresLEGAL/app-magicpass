@@ -3,73 +3,71 @@ import { motion } from 'framer-motion';
 import { useOnboardingStore } from '@/store/useOnboardingStore';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Calendar, Users, MapPin, Clock, Zap, Coffee, GraduationCap, Music, Briefcase } from 'lucide-react';
+import { Building2, Home, Calendar, Trophy, CalendarDays, Shield, MapPin, Clock, Users } from 'lucide-react';
 
-interface FirstEventStepProps {
+interface AccessEnvironmentStepProps {
   onValidationChange: (isValid: boolean) => void;
 }
 
-const eventTemplates = [
+const environmentTemplates = [
   { 
-    value: 'conference', 
-    label: 'Conferência', 
-    icon: <Briefcase className="h-4 w-4" />,
-    description: 'Evento corporativo ou profissional',
-    defaultCapacity: '200'
-  },
-  { 
-    value: 'workshop', 
-    label: 'Workshop', 
-    icon: <GraduationCap className="h-4 w-4" />,
-    description: 'Sessão de aprendizado prático',
-    defaultCapacity: '50'
-  },
-  { 
-    value: 'meetup', 
-    label: 'Meetup', 
-    icon: <Coffee className="h-4 w-4" />,
-    description: 'Encontro informal da comunidade',
-    defaultCapacity: '100'
-  },
-  { 
-    value: 'concert', 
-    label: 'Show/Concerto', 
-    icon: <Music className="h-4 w-4" />,
-    description: 'Evento de entretenimento',
+    value: 'corporate', 
+    label: 'Edifício Corporativo', 
+    icon: <Building2 className="h-4 w-4" />,
+    description: 'Controle de acesso em ambientes empresariais',
     defaultCapacity: '500'
   },
   { 
-    value: 'seminar', 
-    label: 'Seminário', 
-    icon: <Users className="h-4 w-4" />,
-    description: 'Apresentação educacional',
-    defaultCapacity: '150'
+    value: 'residential', 
+    label: 'Área Residencial/Condomínio', 
+    icon: <Home className="h-4 w-4" />,
+    description: 'Acesso para moradores e visitantes',
+    defaultCapacity: '1000'
   },
   { 
-    value: 'networking', 
-    label: 'Networking', 
-    icon: <Zap className="h-4 w-4" />,
-    description: 'Evento de conexões profissionais',
-    defaultCapacity: '80'
+    value: 'event', 
+    label: 'Evento Temporário', 
+    icon: <Calendar className="h-4 w-4" />,
+    description: 'Controle de acesso para eventos específicos',
+    defaultCapacity: '200'
+  },
+  { 
+    value: 'sports', 
+    label: 'Instalação Esportiva', 
+    icon: <Trophy className="h-4 w-4" />,
+    description: 'Academia, clube ou arena esportiva',
+    defaultCapacity: '300'
+  },
+  { 
+    value: 'convention', 
+    label: 'Centro de Convenções', 
+    icon: <CalendarDays className="h-4 w-4" />,
+    description: 'Feiras, congressos e grandes eventos',
+    defaultCapacity: '1000'
+  },
+  { 
+    value: 'restricted', 
+    label: 'Área Restrita/Governamental', 
+    icon: <Shield className="h-4 w-4" />,
+    description: 'Acesso controlado de alta segurança',
+    defaultCapacity: '100'
   }
 ];
 
-export function FirstEventStep({ onValidationChange }: FirstEventStepProps) {
+export function AccessEnvironmentStep({ onValidationChange }: AccessEnvironmentStepProps) {
   const { onboardingData, updateOnboardingData } = useOnboardingStore();
   const [localData, setLocalData] = useState({
-    eventName: onboardingData.eventName,
-    eventType: onboardingData.eventType,
-    eventDate: onboardingData.eventDate,
-    eventCapacity: onboardingData.eventCapacity
+    environmentName: onboardingData.environmentName,
+    environmentType: onboardingData.environmentType,
+    environmentDate: onboardingData.environmentDate,
+    environmentCapacity: onboardingData.environmentCapacity
   });
 
   useEffect(() => {
-    const isValid = localData.eventName.trim().length > 0 && 
-                   localData.eventType.length > 0 && 
-                   localData.eventDate.length > 0 && 
-                   localData.eventCapacity.length > 0;
+    const isValid = localData.environmentName.trim().length > 0 && 
+                   localData.environmentType.length > 0 && 
+                   localData.environmentCapacity.length > 0;
     onValidationChange(isValid);
     
     if (isValid) {
@@ -82,23 +80,22 @@ export function FirstEventStep({ onValidationChange }: FirstEventStepProps) {
   };
 
   const handleTemplateSelect = (templateValue: string) => {
-    const template = eventTemplates.find(t => t.value === templateValue);
+    const template = environmentTemplates.find(t => t.value === templateValue);
     if (template) {
       setLocalData(prev => ({
         ...prev,
-        eventType: templateValue,
-        eventCapacity: template.defaultCapacity
+        environmentType: templateValue,
+        environmentCapacity: template.defaultCapacity
       }));
     }
   };
 
   const getMinDate = () => {
     const today = new Date();
-    today.setDate(today.getDate() + 1); // Tomorrow
     return today.toISOString().split('T')[0];
   };
 
-  const selectedTemplate = eventTemplates.find(t => t.value === localData.eventType);
+  const selectedTemplate = environmentTemplates.find(t => t.value === localData.environmentType);
 
   return (
     <motion.div
@@ -108,27 +105,27 @@ export function FirstEventStep({ onValidationChange }: FirstEventStepProps) {
     >
       <div className="text-center space-y-2">
         <h2 className="text-2xl font-bold text-foreground">
-          Vamos criar seu primeiro evento
+          Configure seu primeiro ambiente de acesso
         </h2>
         <p className="text-muted-foreground">
-          Configure os dados básicos do seu evento para começar a receber inscrições
+          Defina onde o controle de acesso será implementado primeiro
         </p>
       </div>
 
       <div className="space-y-6">
-        {/* Event Template Selection */}
+        {/* Environment Template Selection */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           className="space-y-3"
         >
-          <Label>Tipo de Evento *</Label>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {eventTemplates.map((template) => (
+          <Label>Tipo de Ambiente *</Label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {environmentTemplates.map((template) => (
               <Button
                 key={template.value}
-                variant={localData.eventType === template.value ? "default" : "outline"}
+                variant={localData.environmentType === template.value ? "default" : "outline"}
                 size="sm"
                 onClick={() => handleTemplateSelect(template.value)}
                 className="h-auto p-3 flex flex-col items-start gap-2"
@@ -145,24 +142,24 @@ export function FirstEventStep({ onValidationChange }: FirstEventStepProps) {
           </div>
         </motion.div>
 
-        {/* Event Name */}
+        {/* Environment Name */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
           className="space-y-2"
         >
-          <Label htmlFor="eventName">Nome do Evento *</Label>
+          <Label htmlFor="environmentName">Nome do Ambiente *</Label>
           <Input
-            id="eventName"
-            placeholder="Ex: Conferência de Tecnologia 2024"
-            value={localData.eventName}
-            onChange={(e) => handleInputChange('eventName', e.target.value)}
+            id="environmentName"
+            placeholder="Ex: Sede Matriz, Condomínio Residencial XYZ"
+            value={localData.environmentName}
+            onChange={(e) => handleInputChange('environmentName', e.target.value)}
             className="text-base"
           />
         </motion.div>
 
-        {/* Event Date and Capacity */}
+        {/* Environment Details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -170,13 +167,13 @@ export function FirstEventStep({ onValidationChange }: FirstEventStepProps) {
             transition={{ delay: 0.3 }}
             className="space-y-2"
           >
-            <Label htmlFor="eventDate">Data do Evento *</Label>
+            <Label htmlFor="environmentDate">Início da Operação (opcional)</Label>
             <Input
-              id="eventDate"
+              id="environmentDate"
               type="date"
               min={getMinDate()}
-              value={localData.eventDate}
-              onChange={(e) => handleInputChange('eventDate', e.target.value)}
+              value={localData.environmentDate}
+              onChange={(e) => handleInputChange('environmentDate', e.target.value)}
               className="text-base"
             />
           </motion.div>
@@ -187,22 +184,22 @@ export function FirstEventStep({ onValidationChange }: FirstEventStepProps) {
             transition={{ delay: 0.4 }}
             className="space-y-2"
           >
-            <Label htmlFor="eventCapacity">Capacidade *</Label>
+            <Label htmlFor="environmentCapacity">Capacidade Estimada *</Label>
             <Input
-              id="eventCapacity"
+              id="environmentCapacity"
               type="number"
               min="1"
-              placeholder="100"
-              value={localData.eventCapacity}
-              onChange={(e) => handleInputChange('eventCapacity', e.target.value)}
+              placeholder="500"
+              value={localData.environmentCapacity}
+              onChange={(e) => handleInputChange('environmentCapacity', e.target.value)}
               className="text-base"
             />
           </motion.div>
         </div>
       </div>
 
-      {/* Event Preview */}
-      {localData.eventName && localData.eventType && (
+      {/* Environment Preview */}
+      {localData.environmentName && localData.environmentType && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -211,31 +208,30 @@ export function FirstEventStep({ onValidationChange }: FirstEventStepProps) {
         >
           <div className="flex items-start gap-4">
             <div className="bg-primary/10 p-3 rounded-lg">
-              {selectedTemplate?.icon || <Calendar className="h-6 w-6 text-primary" />}
+              {selectedTemplate?.icon || <Shield className="h-6 w-6 text-primary" />}
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-lg text-foreground mb-2">
-                {localData.eventName}
+                {localData.environmentName}
               </h3>
               <div className="space-y-1 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  <span>
-                    {localData.eventDate 
-                      ? new Date(localData.eventDate).toLocaleDateString('pt-BR', {
-                          weekday: 'long',
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                        })
-                      : 'Data a definir'
-                    }
-                  </span>
-                </div>
+                {localData.environmentDate && (
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4" />
+                    <span>
+                      Início: {new Date(localData.environmentDate).toLocaleDateString('pt-BR', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </span>
+                  </div>
+                )}
                 <div className="flex items-center gap-2">
                   <Users className="h-4 w-4" />
                   <span>
-                    Capacidade: {localData.eventCapacity || '0'} participantes
+                    Capacidade: {localData.environmentCapacity || '0'} pessoas
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -248,9 +244,9 @@ export function FirstEventStep({ onValidationChange }: FirstEventStepProps) {
           
           <div className="mt-4 pt-4 border-t border-primary/20">
             <div className="flex items-center gap-2 text-sm text-primary">
-              <Zap className="h-4 w-4" />
+              <Shield className="h-4 w-4" />
               <span className="font-medium">
-                Após finalizar, sua página de inscrições estará pronta!
+                Após finalizar, seu sistema de controle de acesso estará configurado!
               </span>
             </div>
           </div>

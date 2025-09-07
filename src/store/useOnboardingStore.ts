@@ -12,7 +12,8 @@ export interface OnboardingData {
   // Company Setup
   companyName: string;
   companyType: string;
-  teamSize: string;
+  accessVolume: string;
+  accessGoals: string[];
   
   // Branding
   logoFile: File | null;
@@ -23,11 +24,11 @@ export interface OnboardingData {
   // Team
   teamEmails: string[];
   
-  // First Event
-  eventName: string;
-  eventType: string;
-  eventDate: string;
-  eventCapacity: string;
+  // Environment Setup
+  environmentName: string;
+  environmentType: string;
+  environmentDate: string;
+  environmentCapacity: string;
 }
 
 export interface TourStep {
@@ -69,16 +70,17 @@ export interface OnboardingStore {
 const initialOnboardingData: OnboardingData = {
   companyName: '',
   companyType: '',
-  teamSize: '',
+  accessVolume: '',
+  accessGoals: [],
   logoFile: null,
   logoUrl: '',
   primaryColor: '#3b82f6',
   secondaryColor: '#1e40af',
   teamEmails: [],
-  eventName: '',
-  eventType: '',
-  eventDate: '',
-  eventCapacity: '',
+  environmentName: '',
+  environmentType: '',
+  environmentDate: '',
+  environmentCapacity: '',
 };
 
 export const useOnboardingStore = create<OnboardingStore>()(

@@ -56,7 +56,7 @@ export function TeamStep({ onValidationChange }: TeamStepProps) {
           Convide sua equipe
         </h2>
         <p className="text-muted-foreground">
-          Adicione membros da sua equipe para colaborar na gestão de eventos
+          Adicione membros da sua equipe para colaborar na gestão de acessos
         </p>
       </div>
 
@@ -174,7 +174,7 @@ export function TeamStep({ onValidationChange }: TeamStepProps) {
                 <div>
                   <h3 className="font-medium text-sm">Colaboração</h3>
                   <p className="text-xs text-muted-foreground">
-                    Trabalhe em equipe na criação e gestão de eventos
+                    Trabalhe em equipe na gestão de acessos e controle
                   </p>
                 </div>
               </div>
@@ -188,7 +188,7 @@ export function TeamStep({ onValidationChange }: TeamStepProps) {
                 <div>
                   <h3 className="font-medium text-sm">Notificações</h3>
                   <p className="text-xs text-muted-foreground">
-                    Receba alertas sobre inscrições e check-ins
+                    Receba alertas sobre acessos e atividades de segurança
                   </p>
                 </div>
               </div>

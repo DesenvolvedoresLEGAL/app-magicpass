@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Rocket, Users, BarChart3, CreditCard, Zap, CheckCircle } from 'lucide-react';
+import { Scan, Shield, BarChart3, QrCode, Zap, CheckCircle, Rocket } from 'lucide-react';
 
 interface WelcomeStepProps {
   onValidationChange: (isValid: boolean) => void;
@@ -13,24 +13,24 @@ export function WelcomeStep({ onValidationChange }: WelcomeStepProps) {
 
   const benefits = [
     {
-      icon: <Users className="h-6 w-6 text-primary" />,
-      title: 'Gestão Completa de Eventos',
-      description: 'Crie, gerencie e monitore seus eventos em uma única plataforma'
+      icon: <Scan className="h-6 w-6 text-primary" />,
+      title: 'Reconhecimento Facial',
+      description: 'Acesso rápido e seguro através de biometria avançada'
+    },
+    {
+      icon: <Shield className="h-6 w-6 text-primary" />,
+      title: 'Controle de Acesso Inteligente',
+      description: 'QR Codes e múltiplas formas de entrada segura'
     },
     {
       icon: <BarChart3 className="h-6 w-6 text-primary" />,
       title: 'Analytics em Tempo Real',
-      description: 'Acompanhe métricas detalhadas e insights sobre seus participantes'
-    },
-    {
-      icon: <CreditCard className="h-6 w-6 text-primary" />,
-      title: 'Pagamentos Integrados',
-      description: 'Receba pagamentos de forma segura e automatizada'
+      description: 'Monitore acessos e fluxo de pessoas instantaneamente'
     },
     {
       icon: <Zap className="h-6 w-6 text-primary" />,
-      title: 'Credenciamento Inteligente',
-      description: 'QR Codes e check-in automatizado para seus eventos'
+      title: 'Gestão Completa',
+      description: 'Controle total dos acessos da sua organização'
     }
   ];
 
@@ -55,12 +55,12 @@ export function WelcomeStep({ onValidationChange }: WelcomeStepProps) {
         </div>
         
         <h1 className="text-3xl font-bold text-foreground">
-          Bem-vindo à sua plataforma de eventos!
+          Bem-vindo ao MagicPass!
         </h1>
         
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Vamos configurar sua conta em apenas <strong>5 minutos</strong> para que você possa 
-          começar a criar eventos incríveis hoje mesmo.
+          Vamos configurar sua plataforma de acesso em apenas <strong>5 minutos</strong> para que você possa 
+          começar a oferecer controle de acesso inteligente hoje mesmo.
         </p>
       </motion.div>
 
@@ -109,7 +109,7 @@ export function WelcomeStep({ onValidationChange }: WelcomeStepProps) {
         </div>
         <p className="text-sm text-muted-foreground">
           Nossa configuração guiada irá ajudá-lo a personalizar a plataforma de acordo com 
-          suas necessidades e criar seu primeiro evento em poucos cliques.
+          suas necessidades e configurar seu primeiro ambiente de acesso em poucos cliques.
         </p>
       </motion.div>
     </div>

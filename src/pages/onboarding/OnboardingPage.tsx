@@ -84,18 +84,18 @@ export function OnboardingPage() {
         }
       }
 
-      // Create first event if configured
-      if (onboardingData.eventName && organizationId) {
+      // Create first access environment if configured
+      if (onboardingData.environmentName && organizationId) {
         const { error: eventError } = await supabase
           .from('events')
           .insert({
-            name: onboardingData.eventName,
+            name: onboardingData.environmentName,
             organization_id: organizationId,
-            start_date: onboardingData.eventDate + 'T09:00:00Z',
-            end_date: onboardingData.eventDate + 'T18:00:00Z',
-            capacity: parseInt(onboardingData.eventCapacity) || 100,
+            start_date: onboardingData.environmentDate ? onboardingData.environmentDate + 'T09:00:00Z' : new Date().toISOString(),
+            end_date: onboardingData.environmentDate ? onboardingData.environmentDate + 'T23:59:00Z' : new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+            capacity: parseInt(onboardingData.environmentCapacity) || 500,
             status: 'draft',
-            description: `Evento criado durante a configuração inicial`
+            description: `Ambiente de acesso criado durante a configuração inicial`
           });
 
         if (eventError) {

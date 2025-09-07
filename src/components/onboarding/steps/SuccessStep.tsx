@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useOnboardingStore } from '@/store/useOnboardingStore';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { CheckCircle, Calendar, Users, BarChart3, Settings, ExternalLink, Rocket } from 'lucide-react';
+import { CheckCircle, Shield, Users, BarChart3, Settings, ExternalLink, Rocket, Scan } from 'lucide-react';
 
 interface SuccessStepProps {
   onValidationChange: (isValid: boolean) => void;
@@ -18,32 +18,32 @@ export function SuccessStep({ onValidationChange }: SuccessStepProps) {
 
   const nextSteps = [
     {
-      icon: <Calendar className="h-5 w-5 text-primary" />,
+      icon: <Shield className="h-5 w-5 text-primary" />,
       title: 'Acesse o Dashboard',
-      description: 'Visualize métricas e gerencie seus eventos',
+      description: 'Visualize métricas e gerencie seus acessos',
       action: 'Ir para Dashboard',
       href: '/client/dashboard'
     },
     {
-      icon: <Users className="h-5 w-5 text-primary" />,
-      title: 'Gerenciar Eventos',
-      description: 'Crie novos eventos e configure formulários',
-      action: 'Ver Eventos',
-      href: '/client/eventos'
+      icon: <Scan className="h-5 w-5 text-primary" />,
+      title: 'Configurar Câmeras',
+      description: 'Configure o reconhecimento facial e QR codes',
+      action: 'Configurar Acesso',
+      href: '/client/configuracoes'
     },
     {
       icon: <BarChart3 className="h-5 w-5 text-primary" />,
       title: 'Analytics',
-      description: 'Acompanhe inscrições e engajamento',
+      description: 'Acompanhe acessos e fluxo de pessoas',
       action: 'Ver Analytics',
       href: '/client/analytics'
     },
     {
-      icon: <Settings className="h-5 w-5 text-primary" />,
-      title: 'Configurações',
-      description: 'Personalize sua conta e branding',
-      action: 'Configurar',
-      href: '/client/configuracoes'
+      icon: <Users className="h-5 w-5 text-primary" />,
+      title: 'Cadastrar Usuários',
+      description: 'Adicione pessoas autorizadas ao sistema',
+      action: 'Gerenciar Usuários',
+      href: '/client/usuarios'
     }
   ];
 
@@ -64,9 +64,9 @@ export function SuccessStep({ onValidationChange }: SuccessStepProps) {
       completed: true // Always true since it's optional
     },
     {
-      label: 'Primeiro evento',
-      value: onboardingData.eventName || 'Configurado',
-      completed: !!onboardingData.eventName
+      label: 'Ambiente de acesso',
+      value: onboardingData.environmentName || 'Configurado',
+      completed: !!onboardingData.environmentName
     }
   ];
 
@@ -90,12 +90,12 @@ export function SuccessStep({ onValidationChange }: SuccessStepProps) {
         </div>
         
         <h1 className="text-3xl font-bold text-foreground">
-          🎉 Parabéns! Sua conta está pronta!
+          🎉 Parabéns! Seu MagicPass está pronto!
         </h1>
         
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Sua plataforma de eventos foi configurada com sucesso. 
-          Agora você pode começar a criar eventos incríveis!
+          Seu sistema de controle de acesso foi configurado com sucesso. 
+          Agora você pode começar a oferecer acesso inteligente e seguro!
         </p>
       </motion.div>
 
