@@ -1,26 +1,54 @@
+import { useEffect, useState } from 'react';
 import { KpiCard } from '@/components/ui/KpiCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAppStore } from '@/store/useAppStore';
-import { 
-  Users, 
-  UserCheck, 
-  Clock, 
+import {
+  Users,
+  UserCheck,
+  Clock,
   AlertTriangle,
   Activity
 } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer
+} from 'recharts';
+
+// 👇 Importa o service de participantes
+import participantesApi from '@/services/participantesService';
 
 export default function Dashboard() {
-  const { 
-    estatisticasHoje, 
-    ultimosCheckins, 
-    entradasPorMinuto 
+  const {
+    estatisticasHoje,
+    ultimosCheckins,
+    entradasPorMinuto
   } = useAppStore();
 
-  // Get stats for the active event (ID: '1')
   const stats = estatisticasHoje('1');
   const checkins = ultimosCheckins(10);
   const chartData = entradasPorMinuto();
+
+  // 👇 Novo estado para participantes
+  const [participantesTotal, setParticipantesTotal] = useState<number | null>(null);
+
+  // 👇 Fetch de participantes ao montar
+  useEffect(() => {
+    const fetchParticipantes = async () => {
+      try {
+        const data = await participantesApi.getContagemParticipantes();
+        setParticipantesTotal(data); // A resposta já é o número total de participantes
+      } catch (error) {
+        console.error('Erro ao buscar contagem de participantes:', error);
+      }
+    };
+
+    fetchParticipantes();
+  }, []);
 
   return (
     <div className="p-6 space-y-6">
@@ -51,7 +79,7 @@ export default function Dashboard() {
         />
         <KpiCard
           title="Participantes"
-          value={stats.participantesCadastrados}
+          value={participantesTotal ?? '...'} // Agora mostra o total de participantes
           description="Total cadastrados"
           icon={<Users />}
         />
@@ -79,26 +107,26 @@ export default function Dashboard() {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                  <XAxis 
-                    dataKey="minuto" 
+                  <XAxis
+                    dataKey="minuto"
                     className="text-xs"
                     tick={{ fontSize: 12 }}
                   />
-                  <YAxis 
+                  <YAxis
                     className="text-xs"
                     tick={{ fontSize: 12 }}
                   />
-                  <Tooltip 
-                    contentStyle={{ 
+                  <Tooltip
+                    contentStyle={{
                       backgroundColor: 'hsl(var(--card))',
                       border: '1px solid hsl(var(--border))',
                       borderRadius: '8px'
                     }}
                   />
-                  <Line 
-                    type="monotone" 
-                    dataKey="entradas" 
-                    stroke="hsl(var(--primary))" 
+                  <Line
+                    type="monotone"
+                    dataKey="entradas"
+                    stroke="hsl(var(--primary))"
                     strokeWidth={2}
                     dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 4 }}
                   />
@@ -116,7 +144,7 @@ export default function Dashboard() {
           <CardContent>
             <div className="space-y-3">
               {checkins.map((checkin) => (
-                <div 
+                <div
                   key={checkin.id}
                   className="flex items-center justify-between p-3 rounded-lg bg-muted/50"
                 >
