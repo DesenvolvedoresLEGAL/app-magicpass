@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { FirebaseError } from 'firebase/app'; // ✅ para tratar erros do Firebase
 
 export default function AuthPage() {
   const [email, setEmail] = useState('');
@@ -15,20 +16,15 @@ export default function AuthPage() {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  // Redirect authenticated users based on their role
   useEffect(() => {
     if (user && userRole) {
-      // Will be handled by the redirect logic in App.tsx
+      if (userRole === 'legal_admin') {
+        navigate('/admin', { replace: true });
+      } else if (['client_admin', 'client_operator'].includes(userRole)) {
+        navigate('/client', { replace: true });
+      }
     }
-  }, [user, userRole]);
-
-  if (user && userRole) {
-    if (userRole === 'legal_admin') {
-      return <Navigate to="/admin" replace />;
-    } else if (userRole === 'client_admin' || userRole === 'client_operator') {
-      return <Navigate to="/client" replace />;
-    }
-  }
+  }, [user, userRole, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,16 +34,22 @@ export default function AuthPage() {
       const { error } = await signIn(email, password);
 
       if (error) {
+        const translatedMessage = translateFirebaseError(error.code);
+
         toast({
-          title: 'Erro',
-          description: error.message,
+          title: 'Alerta',
+          description: translatedMessage,
           variant: 'destructive',
         });
       }
-    } catch (error) {
+    } catch (error: any) {
+      const fallbackMessage = error instanceof FirebaseError
+        ? translateFirebaseError(error.code)
+        : 'Ocorreu um erro inesperado. Tente novamente mais tarde.';
+
       toast({
-        title: 'Erro',
-        description: 'Ocorreu um erro inesperado.',
+        title: 'Erro inesperado',
+        description: fallbackMessage,
         variant: 'destructive',
       });
     } finally {
@@ -114,4 +116,26 @@ export default function AuthPage() {
       </Card>
     </div>
   );
+}
+
+// ✅ Função auxiliar para traduzir os erros do Firebase Auth
+function translateFirebaseError(code: string): string {
+  switch (code) {
+    case 'auth/invalid-email':
+      return 'O email informado é inválido.';
+    case 'auth/user-disabled':
+      return 'Esta conta foi desativada.';
+    case 'auth/user-not-found':
+      return 'Usuário não encontrado. Verifique seu email.';
+    case 'auth/wrong-password':
+      return 'Senha incorreta. Tente novamente.';
+    case 'auth/too-many-requests':
+      return 'Muitas tentativas. Tente novamente mais tarde.';
+    case 'auth/network-request-failed':
+      return 'Erro de conexão. Verifique sua internet.';
+    case 'auth/internal-error':
+      return 'Erro interno. Tente novamente.';
+    default:
+      return 'Usuário sem Cadastro.';
+  }
 }
