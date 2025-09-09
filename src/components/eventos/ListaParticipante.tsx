@@ -42,12 +42,13 @@ export default function ListaParticipantes({ eventoId }: ParticipantesProps) {
 
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-bold">Participantes do Evento</h1>
-
-      {/* Tabela de participantes */}
-    <div className="w-full flex justify-end">
-        <CadastrarParticipante />
-    </div>
+      <div className='grid grid-cols-2 align-center'>
+          <h1 className="text-3xl font-bold">Participantes do Evento</h1>
+          {/* Tabela de participantes */}
+              <div className="w-full flex justify-end">
+            <CadastrarParticipante />
+              </div>
+      </div>
 
       <Table>
         <TableHeader>
