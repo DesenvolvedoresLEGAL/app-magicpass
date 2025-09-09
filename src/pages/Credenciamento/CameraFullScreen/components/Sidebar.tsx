@@ -18,7 +18,7 @@ export default function Sidebar({
   qrResult,
 }: SidebarProps) {
   return (
-    <div className="w-1/4 bg-gray-800 flex flex-col p-8 space-y-6 rounded-l-xl shadow-md">
+    <div className="w-1/4 bg-gray-800 flex flex-col p-8 space-y-6 shadow-md">
       <h2 className="text-xl font-semibold text-white text-center mb-4">
         Selecione o Método
       </h2>

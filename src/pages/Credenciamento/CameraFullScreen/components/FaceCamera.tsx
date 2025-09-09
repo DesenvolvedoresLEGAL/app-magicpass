@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import credenciamentoService from '../../../../services/credenciamentoService';  // Importe o serviço que você acabou de criar
 
 interface FaceCameraProps {
   onCaptureComplete: (result: any, status: string) => void;
@@ -9,6 +10,8 @@ export default function FaceCamera({ onCaptureComplete, setLoading }: FaceCamera
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number | null>(null);
+
+  const [nome, setNome] = useState<string | null>(null);
 
   const startCamera = async () => {
     try {
@@ -67,20 +70,29 @@ export default function FaceCamera({ onCaptureComplete, setLoading }: FaceCamera
       if (!blob) return;
       const file = new File([blob], "captured-image.jpg", { type: "image/jpeg" });
 
-      const formData = new FormData();
-      formData.append("imagem", file);
-
       try {
         setLoading(true);
 
-        const response = await fetch("http://127.0.0.1:5000/api/magicpass/v1/participantes/facial", {
-          method: "POST",
-          body: formData,
-        });
+        // Usando o serviço para fazer a requisição de reconhecimento facial
+        const data = await credenciamentoService.reconhecerFacial(file);
 
-        const data = await response.json();
-        const status = data.mensagem?.includes("reprovado") ? "Usuário reprovado!" : "Usuário liberado!";
+        // Processando a resposta para personalizar a mensagem
+        let status = "Erro ao processar o reconhecimento facial.";  // Padrão, caso algo falhe.
 
+        if (data.aprovado) {
+          // Mensagem de aprovação personalizada
+          status = `Parabéns, ${data.nome}! Seu credenciamento foi aprovado. 🎉 Aproveite o evento e tenha uma experiência incrível! 😊`;
+        } else {
+          // Mensagem de reprovação personalizada
+          status = `Infelizmente, ${data.nome}, seu credenciamento não foi aprovado. 😞 Por favor, entre em contato com nossa equipe para mais informações.`;
+        }
+
+        // Atualizando o estado com o nome, caso necessário
+        if (data.nome) {
+          setNome(data.nome);  // Atualizando o nome do participante
+        }
+
+        // Passando a resposta final e status para o callback
         onCaptureComplete(data, status);
       } catch (err) {
         alert("Erro no reconhecimento facial: " + (err as Error).message);

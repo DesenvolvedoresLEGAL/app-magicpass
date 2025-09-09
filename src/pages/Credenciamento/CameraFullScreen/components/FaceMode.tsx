@@ -8,9 +8,10 @@ interface FaceModeProps {
   onCaptureComplete: (result: any, status: string) => void;
   setLoading: (loading: boolean) => void;
   loadingFace: boolean;
+  faceStatus: string;
 }
 
-export default function FaceMode({ onCaptureComplete, setLoading, loadingFace }: FaceModeProps) {
+export default function FaceMode({ onCaptureComplete, setLoading, loadingFace, faceStatus }: FaceModeProps) {
   return (
     <>
       <FaceCamera onCaptureComplete={onCaptureComplete} setLoading={setLoading} />
@@ -19,9 +20,6 @@ export default function FaceMode({ onCaptureComplete, setLoading, loadingFace }:
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
         <MiraFuturista loadingFace={loadingFace}/>
 
-        <div className="absolute top-full mt-3 w-full text-center text-yellow-400 font-semibold select-none">
-          Enquadre o seu rosto aqui
-        </div>
 
         {/* Gradient + progress bar */}
         {loadingFace && (
@@ -30,11 +28,15 @@ export default function FaceMode({ onCaptureComplete, setLoading, loadingFace }:
             </div>
         )}
 
+        {faceStatus && <span>{faceStatus}</span>}
+
+
         {!loadingFace && (
             <div className="scanner-container">
                 <div className="scanner-bar"></div>
             </div>
         )}
+
 
 
       </div>

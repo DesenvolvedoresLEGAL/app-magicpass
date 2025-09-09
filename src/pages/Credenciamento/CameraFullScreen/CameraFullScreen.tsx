@@ -5,6 +5,7 @@ import BannerRotator from "./components/BannerRotator";
 import Sidebar from "./components/Sidebar";
 import HeaderBar from "./components/HeaderBar";
 import FooterPowered from "./components/FooterPowered";
+import "./CameraFullScreen.scss";
 
 const theme = {
   primary: "#D4AF37",
@@ -30,6 +31,7 @@ export default function CameraFullScreen() {
       className="h-screen w-screen flex flex-col"
       style={{ backgroundColor: theme.secondary, color: theme.accent }}
     >
+      
       <HeaderBar />
 
       <div className="flex flex-1">
@@ -60,7 +62,6 @@ export default function CameraFullScreen() {
           qrResult={qrResult}
         />
       </div>
-
       <FooterPowered />
     </div>
   );

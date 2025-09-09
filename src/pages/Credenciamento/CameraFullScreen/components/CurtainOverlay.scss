@@ -1,0 +1,88 @@
+.curtain-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 9999; /* Cortinas ficam abaixo da mensagem */
+}
+
+.curtain {
+  position: absolute;
+  width: 100%;
+  height: 50%;
+}
+
+.curtain-top {
+  top: 0;
+  backdrop-filter: blur(5px);
+  animation: slideYellow 0.3s ease-in-out;
+}
+
+.curtain-bottom {
+  bottom: 0;
+  backdrop-filter: blur(5px);
+  animation: slideGreen 0.3s ease-in-out;
+}
+
+@keyframes slideGreen {
+  0% {
+    transform: translateY(100%);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideYellow {
+  0% {
+    transform: translateY(-100%);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Estilos para a mensagem de boas-vindas (por cima das cortinas) */
+.welcome-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  z-index: 10000;  /* Faz a mensagem aparecer por cima das cortinas */
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.7), 0 0 20px rgba(255, 255, 255, 0.5), 0 0 30px rgba(0, 255, 255, 0.7);
+
+  h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    animation: fadeIn 2s ease-in-out;
+  }
+
+  p {
+    font-size: 1.5rem;
+    font-weight: 300;
+    animation: fadeIn 2s ease-in-out 0.5s;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
