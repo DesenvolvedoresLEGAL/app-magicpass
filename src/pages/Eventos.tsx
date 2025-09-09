@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -11,10 +11,10 @@ import { useAppStore } from '@/store/useAppStore';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import eventosService from '@/services/eventosService'; // Importe o serviço
 
 export default function Eventos() {
-  const { eventos, addEvento } = useAppStore();
-  const navigate = useNavigate();
+  const [eventos, setEventos] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
     nome: '',
@@ -25,7 +25,24 @@ export default function Eventos() {
     descricao: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const navigate = useNavigate();
+
+  // Carregar eventos ao montar o componente
+  useEffect(() => {
+    const fetchEventos = async () => {
+      try {
+        const eventosFetched = await eventosService.getEventos();
+        console.log(eventosFetched.eventos);
+        setEventos(eventosFetched.eventos);
+      } catch (error) {
+        console.error('Erro ao buscar eventos:', error);
+      }
+    };
+
+    fetchEventos();
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     const novoEvento = {
@@ -41,16 +58,23 @@ export default function Eventos() {
       status: 'rascunho' as const
     };
 
-    addEvento(novoEvento);
-    setIsDialogOpen(false);
-    setFormData({
-      nome: '',
-      local: '',
-      dataInicio: '',
-      dataFim: '',
-      capacidade: '',
-      descricao: ''
-    });
+    try {
+      await eventosService.criarEvento(novoEvento);
+      setIsDialogOpen(false);
+      setFormData({
+        nome: '',
+        local: '',
+        dataInicio: '',
+        dataFim: '',
+        capacidade: '',
+        descricao: ''
+      });
+      // Atualizar a lista de eventos
+      const eventosFetched = await eventosService.getEventos();
+      setEventos(eventosFetched.eventos);
+    } catch (error) {
+      console.error('Erro ao criar evento:', error);
+    }
   };
 
   const getStatusBadge = (status: string) => {
@@ -61,7 +85,7 @@ export default function Eventos() {
     };
     
     const config = statusConfig[status as keyof typeof statusConfig];
-    return <Badge variant={config.variant}>{config.label}</Badge>;
+    return <Badge variant={"default"}>{"Ativo"}</Badge>;
   };
 
   return (
@@ -186,7 +210,7 @@ export default function Eventos() {
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Calendar className="w-4 h-4" />
-                  {format(evento.dataInicio, "dd 'de' MMMM 'às' HH:mm", { locale: ptBR })}
+                  {format(evento.data_hora_inicio, "dd 'de' MMMM 'às' HH:mm", { locale: ptBR })}
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <MapPin className="w-4 h-4" />
@@ -203,7 +227,7 @@ export default function Eventos() {
                   variant="outline" 
                   size="sm" 
                   className="flex-1"
-                  onClick={() => navigate(`/eventos/${evento.id}`)}
+                  onClick={() => navigate(`${evento.id}`)}
                 >
                   <Eye className="w-4 h-4 mr-2" />
                   Ver Detalhes
