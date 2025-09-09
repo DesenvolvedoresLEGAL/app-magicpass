@@ -5,9 +5,13 @@ import { Select, SelectGroup, SelectValue, SelectTrigger, SelectContent, SelectL
 import { Input } from '@/components/ui/input';
 import { Camera, Save, Trash } from 'lucide-react';
 import participantesService from '@/services/participantesService';
-import eventoParticipanteService from '@/services/eventoParticipanteService';
 
-const CadastrarParticipante = (props) => {
+interface CadastrarParticipanteProps {
+  eventoId: number;
+  onParticipanteCriado?: (participante: any) => void;
+}
+
+const CadastrarParticipante = ({ eventoId, onParticipanteCriado }: CadastrarParticipanteProps) => {
   const [nome, setNome] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [tipo, setTipo] = useState<string>('executivo');
@@ -15,10 +19,9 @@ const CadastrarParticipante = (props) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false); // Controle do estado do modal
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  // Função para iniciar a câmera
   const startCamera = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -31,7 +34,6 @@ const CadastrarParticipante = (props) => {
     }
   };
 
-  // Função para capturar a foto
   const capturePhoto = () => {
     if (videoRef.current) {
       const canvas = document.createElement('canvas');
@@ -42,12 +44,11 @@ const CadastrarParticipante = (props) => {
         context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
         const dataUrl = canvas.toDataURL('image/png');
         setPhotoUrl(dataUrl);
-        setImagem(dataURLtoFile(dataUrl, 'foto.png')); // Converte para File para envio
+        setImagem(dataURLtoFile(dataUrl, 'foto.png'));
       }
     }
   };
 
-  // Função para converter Data URL para File
   const dataURLtoFile = (dataUrl: string, filename: string): File => {
     const arr = dataUrl.split(',');
     const mime = arr[0].match(/:(.*?);/)?.[1];
@@ -73,18 +74,31 @@ const CadastrarParticipante = (props) => {
       entrada_realizada: false,
       face_embedding: null,
       qr_code_path: null,
-      imagem, // Enviando a imagem capturada
+      imagem,
+      evento_id: eventoId
     };
 
     try {
       setIsSubmitting(true);
       const participanteCriado = await participantesService.criarParticipante(participanteData);
       console.log('Participante criado com sucesso:', participanteCriado);
-      if (props.eventoId) {
-        const relacaoEventoParticipante = await eventoParticipanteService.cadastrarParticipanteEmEvento(props.eventoId, participanteCriado.participante_id);
-        console.log(props.eventoId);
+
+      if (onParticipanteCriado) {
+        onParticipanteCriado(participanteData);
       }
-      setIsDialogOpen(false); // Fecha o modal após o envio
+
+      setIsDialogOpen(false);
+      setIsSubmitting(false);
+      // Limpar campos após cadastro
+      setNome('');
+      setEmail('');
+      setTipo('executivo');
+      setPhotoUrl(null);
+      setImagem(null);
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        setCameraStream(null);
+      }
     } catch (error) {
       console.error('Erro ao cadastrar participante:', error);
       setIsSubmitting(false);
@@ -104,7 +118,6 @@ const CadastrarParticipante = (props) => {
           <DialogTitle>Cadastrar Novo Participante</DialogTitle>
         </DialogHeader>
         <div className="p-6 space-y-6">
-          {/* Formulário para cadastrar participante */}
           <div className="space-y-4">
             <div className="space-y-2">
               <div className="flex flex-col">
@@ -151,7 +164,6 @@ const CadastrarParticipante = (props) => {
                 </Select>
               </div>
 
-              {/* Captura de imagem da câmera */}
               <div className="flex flex-col">
                 <label className="text-sm text-muted-foreground">Foto do Participante</label>
                 {photoUrl ? (
@@ -200,7 +212,7 @@ const CadastrarParticipante = (props) => {
               <Button
                 variant="outline"
                 className="flex-1"
-                onClick={() => setIsDialogOpen(false)} // Fecha o modal ao clicar em "Cancelar"
+                onClick={() => setIsDialogOpen(false)}
               >
                 Cancelar
               </Button>
