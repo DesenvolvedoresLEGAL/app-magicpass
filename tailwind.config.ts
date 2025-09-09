@@ -1,8 +1,13 @@
 import type { Config } from "tailwindcss";
 
-export default {
+const config: Config = {
   darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -14,8 +19,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        'sans': ['Inter', 'system-ui', 'sans-serif'],
-        'heading': ['Inter', 'system-ui', 'sans-serif'],
+        sans: ["Inter", "system-ui", "sans-serif"],
+        heading: ["Inter", "system-ui", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -80,28 +85,31 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
-        "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+        // Mira "abrindo e fechando" (scaleX e scaleY)
+        "scan-breath": {
+          "0%, 100%": { transform: "scaleX(1) scaleY(1)" },
+          "50%": { transform: "scaleX(1.05) scaleY(1.1)" },
         },
-        "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+        // Linha scanner descendo e subindo
+        "scan-line-move": {
+          "0%, 100%": { top: "0%" },
+          "50%": { top: "100%" },
+        },
+        // Glow pulsante na linha scanner
+        "glow-pulse": {
+          "0%, 100%": { boxShadow: "0 0 10px 3px #D4AF37" },
+          "50%": { boxShadow: "0 0 20px 6px #FFD700" },
         },
       },
       animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
+        "scan-breath": "scan-breath 3s ease-in-out infinite",
+        "scan-line-move": "scan-line-move 3s ease-in-out infinite",
+        "glow-pulse": "glow-pulse 3s ease-in-out infinite",
       },
+
     },
   },
   plugins: [require("tailwindcss-animate")],
-} satisfies Config;
+};
+
+export default config;

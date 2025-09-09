@@ -24,7 +24,7 @@ import Users from "./pages/admin/Users";
 import Dashboard from "./pages/Dashboard";
 import Eventos from "./pages/Eventos";
 import EventoDetalhes from "./pages/EventoDetalhes";
-import Credenciamento from "./pages/Credenciamento";
+import Credenciamento from "./pages/Credenciamento/CameraFullScreen/CameraFullScreen";
 import TempoReal from "./pages/TempoReal";
 import Relatorios from "./pages/Relatorios";
 import Configuracoes from "./pages/Configuracoes";
@@ -69,10 +69,10 @@ function AppRoutes() {
     <Routes>
       {/* Auth Route */}
       <Route path="/auth" element={<AuthPage />} />
-      
+
       {/* Onboarding Route */}
       <Route path="/onboarding" element={<OnboardingPage />} />
-      
+
       {/* Root redirect based on user authentication status */}
       <Route path="/" element={
         user ? (
@@ -110,14 +110,13 @@ function AppRoutes() {
       {/* Client Routes */}
       <Route path="/client/*" element={
         <ProtectedRoute requiredRole={['client_admin', 'client_operator']}>
-          <ClientLayout>
+          <ClientLayout showLayout={true}>
             <Routes>
               <Route index element={<Dashboard />} />
               <Route path="eventos" element={<Eventos />} />
               <Route path="eventos/:id" element={<EventoDetalhes />} />
               <Route path="eventos/:eventId/form-builder" element={<FormBuilder />} />
               <Route path="branding" element={<Branding />} />
-              <Route path="credenciamento" element={<Credenciamento />} />
               <Route path="tempo-real" element={<TempoReal />} />
               <Route path="relatorios" element={<Relatorios />} />
               <Route path="financeiro" element={<Financeiro />} />
@@ -129,9 +128,19 @@ function AppRoutes() {
         </ProtectedRoute>
       } />
 
+      {/* Credenciamento Route */}
+      <Route path="/client/credenciamento" element={
+        <ProtectedRoute requiredRole={['client_admin', 'client_operator']}>
+          {/* Passa showLayout como false para não renderizar o layout */}
+          <ClientLayout showLayout={false}>
+            <Credenciamento />
+          </ClientLayout>
+        </ProtectedRoute>
+      } />
+
       {/* Public Routes */}
       <Route path="/inscricao/:eventId" element={<PublicRegister />} />
-      
+
       {/* 404 */}
       <Route path="*" element={<NotFound />} />
     </Routes>

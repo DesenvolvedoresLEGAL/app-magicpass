@@ -1,0 +1,62 @@
+.scanner-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Garante que nada que ultrapasse o contêiner seja visível */
+}
+
+.scanner-bar {
+  position: absolute;
+  top: -5px; /* Começa logo acima do contêiner, você pode ajustar esse valor */
+  left: 0;
+  width: 100%;
+  height: 5px; /* Ajuste a altura da faixa de luz */
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.6) 0%,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(255, 255, 255, 0.6) 100%
+  );
+  animation: scanEffect 2s linear infinite; /* Animação contínua */
+}
+
+@keyframes scanEffect {
+  0% {
+    top: -100%; /* Começa acima do contêiner */
+  }
+  50% {
+    top: 50%; /* Meio da animação */
+  }
+  100% {
+    top: 100%; /* Termina abaixo do contêiner */
+  }
+}
+
+
+.scanner-bar-lendo {
+  position: absolute;
+  top: -5px; /* Começa logo acima do contêiner, você pode ajustar esse valor */
+  left: 0;
+  width: 100%;
+  height: 15px; /* Ajuste a altura da faixa de luz */
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.6) 0%,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(255, 255, 255, 0.6) 100%
+  );
+  animation: scanEffectLendo 1s linear infinite; /* Animação contínua */
+}
+
+
+@keyframes scanEffectLendo {
+  0% {
+    top: 100%; /* Começa acima do contêiner */
+  }
+  50% {
+    top: 50%; /* Meio da animação */
+  }
+  100% {
+    top: -100%; /* Termina abaixo do contêiner */
+  }
+}

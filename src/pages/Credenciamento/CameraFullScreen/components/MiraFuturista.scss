@@ -1,0 +1,188 @@
+.tela-com-blur {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+
+  // Camada com blur aplicado fora da mira
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(5px);
+    mask: 
+    linear-gradient(#000 0 0) content-box, 
+    linear-gradient(#000 0 0);
+    -webkit-mask: 
+    linear-gradient(#000 0 0) content-box, 
+    linear-gradient(#000 0 0);
+    mask-composite: exclude; /* Para Firefox */
+    -webkit-mask-composite: destination-out; /* Para Chrome, Safari */
+    padding: 8rem 36rem;
+
+    z-index: 1;
+    pointer-events: none;
+  }
+}
+
+.mira-futurista {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24rem;
+  height: 24rem;
+  transform: translate(-50%, -50%);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  z-index: 2; // Acima da camada com blur
+
+  .canto {
+    position: absolute;
+    width: 3rem;
+    height: 6rem;
+    border-color: #facc15;
+    z-index: 2;
+    animation: foco 2.5s infinite ease-in-out alternate;
+    background: transparent;
+  }
+
+  .canto-tl {
+    top: 0;
+    left: 0;
+    border-top: 10px solid;
+    border-left: 10px solid;
+    border-top-left-radius: 0.5rem;
+    animation-delay: 0s;
+  }
+
+  .canto-tr {
+    top: 0;
+    right: 0;
+    border-top: 10px solid;
+    border-right: 10px solid;
+    border-top-right-radius: 0.5rem;
+    animation-delay: 0.15s;
+  }
+
+  .canto-bl {
+    bottom: 0;
+    left: 0;
+    border-bottom: 10px solid;
+    border-left: 10px solid;
+    border-bottom-left-radius: 0.5rem;
+    animation-delay: 0.3s;
+  }
+
+  .canto-br {
+    bottom: 0;
+    right: 0;
+    border-bottom: 10px solid;
+    border-right: 10px solid;
+    border-bottom-right-radius: 0.5rem;
+    animation-delay: 0.45s;
+  }
+
+  @keyframes foco {
+    0% {
+      transform: translate(0, 0);
+    }
+    20% {
+      transform: translate(20px, -3px);
+    }
+    40% {
+      transform: translate(-2px, 30px);
+    }
+    60% {
+      transform: translate(30px, -2px);
+    }
+    80% {
+      transform: translate(-1px, 1px);
+    }
+    100% {
+      transform: translate(0, 0);
+    }
+  }
+}
+.star {
+  position: absolute;
+  background: transparent; // porque vamos usar os ::before e ::after pra brilho
+  width: var(--size);
+  height: var(--size);
+  opacity: 0.6;
+  animation: piscar 1.8s ease-in-out infinite alternate,
+             movimentarEstrela 6s ease-in-out infinite alternate;
+  animation-delay: var(--delay), var(--delay);
+  z-index: 9999999;
+  filter: drop-shadow(0 0 2px white);
+  border-radius: 50%;
+
+  &::before, &::after {
+    content: "";
+    position: absolute;
+    background: white;
+    top: 50%;
+    left: 50%;
+    transform-origin: center;
+    filter: drop-shadow(0 0 3px white);
+    border-radius: 2px;
+  }
+
+  &::before {
+    width: calc(var(--size) / 5);
+    height: var(--size);
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  &::after {
+    width: calc(var(--size) / 5);
+    height: var(--size);
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+}
+
+@keyframes movimentarEstrela {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(5px, -3px);
+  }
+  50% {
+    transform: translate(-4px, 4px);
+  }
+  75% {
+    transform: translate(3px, 2px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+
+@keyframes piscar {
+  0%, 100% {
+    opacity: 0.1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.4);
+  }
+}
+
+@keyframes bamboleio {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(3px, -3px);
+  }
+  50% {
+    transform: translate(0, -5px);
+  }
+  75% {
+    transform: translate(-3px, -3px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
