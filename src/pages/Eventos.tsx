@@ -14,6 +14,19 @@ export default function Eventos() {
 
   const navigate = useNavigate();
 
+  const handleEventoCriado = (novoEvento) => {
+
+    // Verifique se a lista de eventos está vazia
+    const ultimoId = eventos.length > 0 ? eventos[eventos.length - 1].id : 0;
+    
+    // Atribua um novo ID ao novo evento
+    novoEvento.id = ultimoId + 1;
+
+    // Agora adicione o novo evento ao estado
+    setEventos((prevEventos) => [...prevEventos, novoEvento]);
+  };
+
+
   // Carregar eventos ao montar o componente
   useEffect(() => {
     const fetchEventos = async () => {
@@ -35,9 +48,14 @@ export default function Eventos() {
       rascunho: { label: 'Rascunho', variant: 'secondary' as const },
       finalizado: { label: 'Finalizado', variant: 'outline' as const }
     };
-    
+
     const config = statusConfig[status as keyof typeof statusConfig];
     return <Badge variant={"default"}>{"Ativo"}</Badge>;
+  };
+
+  const isValidDate = (date) => {
+    const parsedDate = new Date(date);
+    return !isNaN(parsedDate.getTime());
   };
 
   return (
@@ -51,7 +69,7 @@ export default function Eventos() {
           </p>
         </div>
 
-        <EventoDialog />
+        <EventoDialog onEventoCriado={handleEventoCriado} />
       </div>
 
       {/* Events Grid */}
@@ -68,7 +86,9 @@ export default function Eventos() {
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Calendar className="w-4 h-4" />
-                  {format(evento.data_hora_inicio, "dd 'de' MMMM 'às' HH:mm", { locale: ptBR })}
+                  {isValidDate(evento.data_hora_inicio)
+                    ? format(new Date(evento.data_hora_inicio), "dd 'de' MMMM 'às' HH:mm", { locale: ptBR })
+                    : 'Data inválida'}
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <MapPin className="w-4 h-4" />
@@ -79,7 +99,7 @@ export default function Eventos() {
                   Capacidade: {evento.capacidade}
                 </div>
               </div>
-              
+
               <div className="flex gap-2">
                 <Button 
                   variant="outline" 
