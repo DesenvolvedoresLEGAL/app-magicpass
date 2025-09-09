@@ -73,15 +73,17 @@ export default function FaceCamera({ onCaptureComplete, setLoading }: FaceCamera
       try {
         setLoading(true);
 
-        // Usando o serviço para fazer a requisição de reconhecimento facial
+        // Usando o serviço para fazer o reconhecimento facial
         const data = await credenciamentoService.reconhecerFacial(file);
 
-        // Processando a resposta para personalizar a mensagem
         let status = "Erro ao processar o reconhecimento facial.";  // Padrão, caso algo falhe.
 
         if (data.aprovado) {
           // Mensagem de aprovação personalizada
           status = `Parabéns, ${data.nome}! Seu credenciamento foi aprovado. 🎉 Aproveite o evento e tenha uma experiência incrível! 😊`;
+
+          // Registrando a entrada do participante se aprovado
+          await credenciamentoService.registrarEntrada(data.id, 'facial', 'desconhecido', 'Entrada via reconhecimento facial');
         } else {
           // Mensagem de reprovação personalizada
           status = `Infelizmente, ${data.nome}, seu credenciamento não foi aprovado. 😞 Por favor, entre em contato com nossa equipe para mais informações.`;

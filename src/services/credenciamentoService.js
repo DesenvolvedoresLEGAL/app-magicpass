@@ -1,4 +1,4 @@
-import api from './api'; // Certifique-se de ter a configuração correta do axios
+import api from './api'; // Certifique-se de que o axios está configurado corretamente
 
 // Função para reconhecimento facial
 const reconhecerFacial = async (imagem) => {
@@ -19,6 +19,26 @@ const reconhecerFacial = async (imagem) => {
   }
 };
 
+// Função para criar um log de entrada
+const registrarEntrada = async (participanteId, metodo, dispositivo, observacao) => {
+  try {
+    const logData = {
+      participante_id: participanteId,
+      metodo: metodo,
+      dispositivo: dispositivo || null,
+      observacao: observacao || "",
+    };
+
+    const response = await api.post('/entradas', logData);
+
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao registrar log de entrada:', error);
+    throw error;
+  }
+};
+
 export default {
   reconhecerFacial,
+  registrarEntrada, // Expondo a função para registrar a entrada
 };
