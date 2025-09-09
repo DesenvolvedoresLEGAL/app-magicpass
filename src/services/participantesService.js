@@ -1,6 +1,6 @@
 import api from './api'; // Caminho para o seu arquivo de configuração do axios
 
-const PARTICIPANTES_ENDPOINT = '/api/magicpass/v1/participantes';
+const PARTICIPANTES_ENDPOINT = 'participantes';
 const PARTICIPANTES_CONTAGEM_ENDPOINT = 'participantes/count'; // Nova rota para contagem
 
 // Função para pegar todos os participantes
