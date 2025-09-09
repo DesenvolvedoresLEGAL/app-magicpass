@@ -2,29 +2,15 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Calendar, MapPin, Users, Eye } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { useAppStore } from '@/store/useAppStore';
+import { Calendar, MapPin, Users, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import eventosService from '@/services/eventosService'; // Importe o serviço
-import EventoDialog from '@/components/eventos/EventoDialog'
+import eventosService from '@/services/eventosService';
+import EventoDialog from '@/components/eventos/EventoDialog';
 
 export default function Eventos() {
   const [eventos, setEventos] = useState([]);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    nome: '',
-    local: '',
-    dataInicio: '',
-    dataFim: '',
-    capacidade: '',
-    descricao: ''
-  });
 
   const navigate = useNavigate();
 
@@ -42,41 +28,6 @@ export default function Eventos() {
 
     fetchEventos();
   }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    const novoEvento = {
-      nome: formData.nome,
-      slug: formData.nome.toLowerCase().replace(/\s+/g, '-'),
-      dataInicio: new Date(formData.dataInicio),
-      dataFim: new Date(formData.dataFim),
-      local: formData.local,
-      capacidade: parseInt(formData.capacidade),
-      politicaReentrada: true,
-      prefixoQR: formData.nome.substring(0, 4).toUpperCase(),
-      webhooks: [],
-      status: 'rascunho' as const
-    };
-
-    try {
-      await eventosService.criarEvento(novoEvento);
-      setIsDialogOpen(false);
-      setFormData({
-        nome: '',
-        local: '',
-        dataInicio: '',
-        dataFim: '',
-        capacidade: '',
-        descricao: ''
-      });
-      // Atualizar a lista de eventos
-      const eventosFetched = await eventosService.getEventos();
-      setEventos(eventosFetched.eventos);
-    } catch (error) {
-      console.error('Erro ao criar evento:', error);
-    }
-  };
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
