@@ -86,7 +86,7 @@ export default function FaceCamera({ onCaptureComplete, setLoading }: FaceCamera
           await credenciamentoService.registrarEntrada(data.id, 'facial', 'desconhecido', 'Entrada via reconhecimento facial');
         } else {
           // Mensagem de reprovação personalizada
-          status = `Infelizmente, ${data.nome}, seu credenciamento não foi aprovado. 😞 Por favor, entre em contato com nossa equipe para mais informações.`;
+          status = `Infelizmente, seu credenciamento não foi aprovado. 😞 Por favor, entre em contato com nossa equipe para mais informações.`;
         }
 
         // Atualizando o estado com o nome, caso necessário

@@ -54,7 +54,7 @@ export default function Sidebar({
         </button>
       </div>
 
-      <div className="flex-grow bg-gray-700 rounded-md p-4 overflow-auto text-sm text-white">
+      <div className="flex-grow bg-white rounded-md p-4 overflow-auto text-sm text-black">
         {mode === "qr" && qrResult && (
           <div className="text-center">
             <strong>QR Code detectado:</strong>

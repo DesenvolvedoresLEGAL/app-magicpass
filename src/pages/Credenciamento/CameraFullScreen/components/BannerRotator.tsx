@@ -23,12 +23,12 @@ export default function BannerRotator() {
         alt={`Banner ${currentIndex + 1}`}
         className="max-h-full max-w-full object-contain rounded-lg shadow-lg"
       />
-      <div
+      {/* <div
         className="absolute top-0 right-0 transform text-white text-xs font-bold p-2"
         style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', borderRadius: '5px' }}
       >
         Publicidade
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -11,7 +11,7 @@ export default function HeaderBar() {
           className="h-8 object-contain"
         />
       </div>
-      Bem-vindo ao Red Carpet Tech Conference '25!
+      Bem-vindo ao Show do The Calling
     </header>
   );
 }
