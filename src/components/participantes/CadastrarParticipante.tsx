@@ -1,8 +1,8 @@
 import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Select, SelectGroup, SelectValue, SelectTrigger, SelectContent, SelectLabel, SelectItem } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 import { Camera, Save, Trash } from 'lucide-react';
 import participantesService from '@/services/participantesService';
 import eventoParticipanteService from '@/services/eventoParticipanteService';
@@ -15,9 +15,7 @@ const CadastrarParticipante = (props) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
-  const navigate = useNavigate();
-  
-  // Referência para o elemento de vídeo da câmera
+  const [isDialogOpen, setIsDialogOpen] = useState(false); // Controle do estado do modal
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   // Função para iniciar a câmera
@@ -83,10 +81,10 @@ const CadastrarParticipante = (props) => {
       const participanteCriado = await participantesService.criarParticipante(participanteData);
       console.log('Participante criado com sucesso:', participanteCriado);
       if (props.eventoId) {
-        const relacaoEventoParticipante = await eventoParticipanteService.cadastrarParticipanteEmEvento(props.eventoId, participanteCriado.participante_id)
+        const relacaoEventoParticipante = await eventoParticipanteService.cadastrarParticipanteEmEvento(props.eventoId, participanteCriado.participante_id);
         console.log(props.eventoId);
       }
-      navigate('/client/participantes'); // Navegar para a lista de participantes
+      setIsDialogOpen(false); // Fecha o modal após o envio
     } catch (error) {
       console.error('Erro ao cadastrar participante:', error);
       setIsSubmitting(false);
@@ -94,125 +92,130 @@ const CadastrarParticipante = (props) => {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Cadastrar Novo Participante</h1>
-      </div>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <DialogTrigger asChild>
+        <Button className="gap-2">
+          <Save className="w-4 h-4" />
+          Cadastrar Participante
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Cadastrar Novo Participante</DialogTitle>
+        </DialogHeader>
+        <div className="p-6 space-y-6">
+          {/* Formulário para cadastrar participante */}
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <div className="flex flex-col">
+                <label htmlFor="nome" className="text-sm text-muted-foreground">
+                  Nome
+                </label>
+                <Input
+                  id="nome"
+                  type="text"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                  placeholder="Nome do participante"
+                />
+              </div>
 
-      {/* Formulário para cadastrar participante */}
-      <Card className="transition-all hover:shadow-md">
-        <CardHeader>
-          <CardTitle className="text-lg">Informações do Participante</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <div className="flex flex-col">
-              <label htmlFor="nome" className="text-sm text-muted-foreground">
-                Nome
-              </label>
-              <input
-                id="nome"
-                type="text"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-                className="input"
-                placeholder="Nome do participante"
-              />
-            </div>
+              <div className="flex flex-col">
+                <label htmlFor="email" className="text-sm text-muted-foreground">
+                  Email
+                </label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Email do participante"
+                />
+              </div>
 
-            <div className="flex flex-col">
-              <label htmlFor="email" className="text-sm text-muted-foreground">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="input"
-                placeholder="Email do participante"
-              />
-            </div>
+              <div className="flex flex-col">
+                <label htmlFor="tipo" className="text-sm text-muted-foreground">
+                  Tipo
+                </label>
+                <Select value={tipo} onValueChange={(value) => setTipo(value)}>
+                  <SelectTrigger className="input">
+                    <SelectValue placeholder="Selecione uma opção" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Tipo</SelectLabel>
+                      <SelectItem value="executivo">Executivo</SelectItem>
+                      <SelectItem value="publico">Público</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
 
-            <div className="flex flex-col">
-              <label htmlFor="tipo" className="text-sm text-muted-foreground">
-                Tipo
-              </label>
-              <select
-                id="tipo"
-                value={tipo}
-                onChange={(e) => setTipo(e.target.value)}
-                className="input"
-              >
-                <option value="executivo">Executivo</option>
-                <option value="publico">Público</option>
-              </select>
-            </div>
-
-            {/* Captura de imagem da câmera */}
-            <div className="flex flex-col">
-              <label className="text-sm text-muted-foreground">Foto do Participante</label>
-              {photoUrl ? (
-                <div className="mt-2">
-                  <img src={photoUrl} alt="Foto do Participante" className="w-full h-auto rounded-md" />
-                  <Button
-                    variant="outline"
-                    className="mt-2"
-                    onClick={() => setPhotoUrl(null)}
-                  >
-                    <Trash className="w-4 h-4 mr-2" />
-                    Remover Foto
-                  </Button>
-                </div>
-              ) : (
-                <div className="flex justify-center">
-                  <video ref={videoRef} autoPlay className="w-full h-auto rounded-md" />
-                </div>
-              )}
-              <div className="flex gap-2 mt-2">
-                {!photoUrl ? (
-                  <>
+              {/* Captura de imagem da câmera */}
+              <div className="flex flex-col">
+                <label className="text-sm text-muted-foreground">Foto do Participante</label>
+                {photoUrl ? (
+                  <div className="mt-2">
+                    <img src={photoUrl} alt="Foto do Participante" className="w-full h-auto rounded-md" />
                     <Button
                       variant="outline"
-                      className="w-full"
-                      onClick={startCamera}
+                      className="mt-2"
+                      onClick={() => setPhotoUrl(null)}
                     >
-                      <Camera className="w-4 h-4 mr-2" />
-                      Iniciar Câmera
+                      <Trash className="w-4 h-4 mr-2" />
+                      Remover Foto
                     </Button>
-                    <Button
-                      variant="default"
-                      className="w-full"
-                      onClick={capturePhoto}
-                    >
-                      <Camera className="w-4 h-4 mr-2" />
-                      Capturar Foto
-                    </Button>
-                  </>
-                ) : null}
+                  </div>
+                ) : (
+                  <div className="flex justify-center">
+                    <video ref={videoRef} autoPlay className="w-full h-auto rounded-md" />
+                  </div>
+                )}
+                <div className="flex gap-2 mt-2">
+                  {!photoUrl ? (
+                    <>
+                      <Button
+                        variant="outline"
+                        className="w-full"
+                        onClick={startCamera}
+                      >
+                        <Camera className="w-4 h-4 mr-2" />
+                        Iniciar Câmera
+                      </Button>
+                      <Button
+                        variant="default"
+                        className="w-full"
+                        onClick={capturePhoto}
+                      >
+                        <Camera className="w-4 h-4 mr-2" />
+                        Capturar Foto
+                      </Button>
+                    </>
+                  ) : null}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              className="flex-1"
-              onClick={() => navigate('/client/participantes')}
-            >
-              Cancelar
-            </Button>
-            <Button
-              variant="default"
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Cadastrando...' : <><Save className="w-4 h-4 mr-2" />Cadastrar</>}
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => setIsDialogOpen(false)} // Fecha o modal ao clicar em "Cancelar"
+              >
+                Cancelar
+              </Button>
+              <Button
+                variant="default"
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Cadastrando...' : <><Save className="w-4 h-4 mr-2" />Cadastrar</>}
+              </Button>
+            </div>
           </div>
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 
