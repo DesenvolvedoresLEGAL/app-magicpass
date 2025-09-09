@@ -28,7 +28,7 @@ const getEventoPorId = async (id) => {
 // Função para criar um novo evento
 const criarEvento = async (dadosEvento) => {
   try {
-    const response = await api.post(EVENTOS_ENDPOINT, dadosEvento);
+    const response = await api.post(`${EVENTOS_ENDPOINT}/`, dadosEvento);
     return response.data;
   } catch (error) {
     console.error('Erro ao criar evento:', error);
