@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import eventosService from '@/services/eventosService'; // Importe o serviço
+import EventoDialog from '@/components/eventos/EventoDialog'
 
 export default function Eventos() {
   const [eventos, setEventos] = useState([]);
@@ -98,102 +99,8 @@ export default function Eventos() {
             Gerencie seus eventos e credenciamento
           </p>
         </div>
-        
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="gap-2">
-              <Plus className="w-4 h-4" />
-              Criar Evento
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Criar Novo Evento</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <Label htmlFor="nome">Nome do Evento</Label>
-                <Input
-                  id="nome"
-                  value={formData.nome}
-                  onChange={(e) => setFormData(prev => ({ ...prev, nome: e.target.value }))}
-                  placeholder="Ex: Tech Conference 2024"
-                  required
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="local">Local</Label>
-                <Input
-                  id="local"
-                  value={formData.local}
-                  onChange={(e) => setFormData(prev => ({ ...prev, local: e.target.value }))}
-                  placeholder="Ex: Centro de Convenções"
-                  required
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="dataInicio">Data/Hora Início</Label>
-                  <Input
-                    id="dataInicio"
-                    type="datetime-local"
-                    value={formData.dataInicio}
-                    onChange={(e) => setFormData(prev => ({ ...prev, dataInicio: e.target.value }))}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="dataFim">Data/Hora Fim</Label>
-                  <Input
-                    id="dataFim"
-                    type="datetime-local"
-                    value={formData.dataFim}
-                    onChange={(e) => setFormData(prev => ({ ...prev, dataFim: e.target.value }))}
-                    required
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <Label htmlFor="capacidade">Capacidade</Label>
-                <Input
-                  id="capacidade"
-                  type="number"
-                  value={formData.capacidade}
-                  onChange={(e) => setFormData(prev => ({ ...prev, capacidade: e.target.value }))}
-                  placeholder="Ex: 500"
-                  required
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="descricao">Descrição</Label>
-                <Textarea
-                  id="descricao"
-                  value={formData.descricao}
-                  onChange={(e) => setFormData(prev => ({ ...prev, descricao: e.target.value }))}
-                  placeholder="Descrição do evento..."
-                  rows={3}
-                />
-              </div>
-              
-              <div className="flex gap-2 pt-4">
-                <Button type="submit" className="flex-1">
-                  Criar Evento
-                </Button>
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={() => setIsDialogOpen(false)}
-                >
-                  Cancelar
-                </Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
+
+        <EventoDialog />
       </div>
 
       {/* Events Grid */}
