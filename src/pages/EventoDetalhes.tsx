@@ -7,9 +7,8 @@ import { Calendar, MapPin, Users, Edit, Trash, Plus } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import eventosService from '@/services/eventosService'; // Importe o serviço para eventos
-import { Dialog } from '@radix-ui/react-dialog'; // Para modal
-import CadastrarParticipante from '@/components/participantes/CadastrarParticipante'; // Importa o componente de cadastro
 import ListaParticipantes from '@/components/eventos/ListaParticipante';
+import AtualizarEventoDialog from '@/components/eventos/AtualizarEventoDialog';
 
 const EventoDetalhes = () => {
   const { id } = useParams<{ id: string }>(); // Pegando o ID da URL
@@ -17,6 +16,12 @@ const EventoDetalhes = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true); // Estado para controle de carregamento
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // Estado para controle do modal
   const navigate = useNavigate(); // Hook para navegação
+
+  const handleEventoAtualizado = (eventoAtualizado) => {
+    // Atualizar o evento na lista de eventos, substituindo pelo evento com o mesmo ID
+    setEvento(eventoAtualizado);
+  };
+
 
   // Carregar os detalhes do evento
   useEffect(() => {
@@ -64,9 +69,7 @@ const EventoDetalhes = () => {
         </div>
         
         <div className="flex gap-4">
-          <Button onClick={() => navigate(`/client/eventos/editar/${evento.id}`)} variant="outline">
-            <Edit className="w-4 h-4 mr-2" /> Editar
-          </Button>
+          <AtualizarEventoDialog eventoId={evento.id} onEventoAtualizado={handleEventoAtualizado}/>
           <Button
             variant="outline"
             className="text-red-500"
@@ -79,14 +82,6 @@ const EventoDetalhes = () => {
             }}
           >
             <Trash className="w-4 h-4 mr-2" /> Excluir
-          </Button>
-          {/* Botão para abrir o modal */}
-          <Button
-            variant="outline"
-            className="text-blue-500"
-            onClick={() => setIsModalOpen(true)}
-          >
-            <Plus className="w-4 h-4 mr-2" /> Adicionar Participante
           </Button>
         </div>
       </div>
