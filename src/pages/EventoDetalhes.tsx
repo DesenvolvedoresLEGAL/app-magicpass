@@ -133,7 +133,6 @@ const EventoDetalhes = () => {
       </Card>
 
       {/* Modal de Cadastro de Participante */}
-      <CadastrarParticipante eventoId={evento.id} />
       <ListaParticipantes eventoId={evento.id} />
     </div>
   );

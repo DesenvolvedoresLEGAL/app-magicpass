@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHeader, TableRow } from '@/components/ui/table';
 import { Pagination } from '@/components/ui/pagination';
 import { Eye } from 'lucide-react';
 import eventoParticipanteService from '@/services/eventoParticipanteService';
+import CadastrarParticipante from '../participantes/CadastrarParticipante';
 
 interface Participante {
   id: number;
@@ -44,14 +45,18 @@ export default function ListaParticipantes({ eventoId }: ParticipantesProps) {
       <h1 className="text-3xl font-bold">Participantes do Evento</h1>
 
       {/* Tabela de participantes */}
+    <div className="w-full flex justify-end">
+        <CadastrarParticipante />
+    </div>
+
       <Table>
-        <TableHead>
+        <TableHeader>
           <TableRow>
             <TableCell>Nome</TableCell>
             <TableCell>Email</TableCell>
             <TableCell>Ações</TableCell>
           </TableRow>
-        </TableHead>
+        </TableHeader>
         <TableBody>
           {participantes.map((participante) => (
             <TableRow key={participante.id}>
